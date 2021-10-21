@@ -1,0 +1,18 @@
+<mat-toolbar>
+    <a routerLink="/">
+        <span
+            class="header__title mat-headline"
+            [innerHTML]="title | brandTitle"
+        ></span>
+    </a>
+
+    <ul class="header__menu-list">
+        <li
+            routerLinkActive="active"
+            *ngFor="let menu of menuList"
+            class="header__menu-list-item mat-subheading-2"
+        >
+            <a [routerLink]="menu.path">{{ menu.name | titlecase }}</a>
+        </li>
+    </ul>
+</mat-toolbar>
