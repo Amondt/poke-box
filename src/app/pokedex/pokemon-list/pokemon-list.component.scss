@@ -1,0 +1,43 @@
+.container {
+    max-width: 1200px;
+    margin: 3rem auto;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-row .mat-cell {
+    border: none;
+}
+
+.mat-column-number {
+    width: 150px;
+}
+
+.mat-column-total,
+.mat-column-hp,
+.mat-column-atk,
+.mat-column-def,
+.mat-column-spAtk,
+.mat-column-spDef,
+.mat-column-speed {
+    width: 8%;
+}
+
+.icon-wrapper,
+.number {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.icon-wrapper {
+    margin-right: 0.25rem;
+}
+
+.icon {
+    vertical-align: middle;
+    position: relative;
+    top: -0.8rem;
+    cursor: pointer;
+}
