@@ -57,8 +57,8 @@ export class PokedexService {
                                 pokemonsListRes.results.map(
                                     (pokemon: any, index: number) => {
                                         return {
-                                            ...pokemonsByNameRes[index],
                                             ...pokemonSpeciesByNamesRes[index],
+                                            ...pokemonsByNameRes[index],
                                         };
                                     }
                                 );
@@ -84,7 +84,9 @@ export class PokedexService {
                     .filter((name: any) => {
                         return (
                             name.language.name === 'fr' ||
-                            name.language.name === 'en'
+                            name.language.name === 'en' ||
+                            name.language.name === 'de' ||
+                            name.language.name === 'ja'
                         );
                     })
                     .map((name: any) => {
@@ -106,6 +108,9 @@ export class PokedexService {
 
                 return {
                     id: pokemon.id,
+                    order: pokemon.order,
+                    isDefault: pokemon.is_default,
+                    name: pokemon.name,
                     names: reducedNames,
                     icon: pokemon.sprites.versions['generation-viii'].icons
                         .front_default,
@@ -131,14 +136,21 @@ export class PokedexService {
     realtimeDbListen = () => {
         const realtimeDbSub = onSnapshot(this.pokemonListRef, (doc) => {
             if (doc.exists()) {
-                console.log('Data changed', doc.data().list);
-                this.pokemonList = doc.data().list;
+                this.pokemonList = doc
+                    .data()
+                    .list.filter(
+                        (pokemon: ReducedPokemon) => pokemon.order !== -1
+                    )
+                    .sort((a: ReducedPokemon, b: ReducedPokemon) =>
+                        a.order < b.order ? -1 : 1
+                    );
                 this.pokemonListUpdated.next(this.pokemonList.slice());
+                console.log('Data changed', this.pokemonList);
             }
         });
     };
 
-    getPokemonList = () => {
-        return this.pokemonList.slice();
+    getPokemonList = (limit = this.pokemonList.length) => {
+        return this.pokemonList.slice(0, limit);
     };
 }

@@ -1,28 +1,57 @@
 <div class="container">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <!-- Number Column -->
-        <ng-container matColumnDef="number">
-            <th mat-header-cell *matHeaderCellDef>#</th>
-            <td mat-cell *matCellDef="let pokemon">
+    <table
+        mat-table
+        [dataSource]="pokemonList"
+        matSort
+        (matSortChange)="sortData($event)"
+        class="mat-elevation-z8"
+    >
+        <!-- Order Column -->
+        <ng-container matColumnDef="order">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let pokemon; let i = index">
                 <span class="icon-wrapper">
                     <img
                         class="icon"
-                        [src]="pokemon.icon"
-                        [alt]="pokemon.names[0].name"
-                        [matTooltip]="pokemon.names[0].name"
+                        [src]="
+                            pokemon.icon !== null
+                                ? pokemon.icon
+                                : getSimilarIcon(
+                                      i +
+                                          paginator.pageIndex *
+                                              paginator.pageSize
+                                  )
+                        "
+                        [alt]="pokemon.name"
+                        [matTooltip]="pokemon.name"
                     />
+                    {{
+                        pokemon.icon === null ? pokemon.order + " // " + i : ""
+                    }}
                 </span>
-                <span class="number">
-                    {{ pokemon.id | threeCharacterNumber }}
+                <span class="order">
+                    {{ pokemon.order | threeCharacterNumber }}
                 </span>
             </td>
         </ng-container>
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
             <td mat-cell *matCellDef="let pokemon">
-                <p *ngFor="let name of pokemon.names">{{ name.name }}</p>
+                <a routerLink="/pokedex">
+                    <p class="main-name mat-subheading-2" color="accent">
+                        {{ pokemon.name | titlecase }}
+                    </p>
+                </a>
+                <span *ngFor="let name of pokemon.names">
+                    <span
+                        class="languages-names mat-caption"
+                        *ngIf="name.languageCode !== 'en'"
+                    >
+                        {{ name.name }}
+                    </span>
+                </span>
             </td>
         </ng-container>
 
@@ -36,7 +65,7 @@
 
         <!-- Total Column -->
         <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
             <td mat-cell *matCellDef="let pokemon">
                 {{ getTotalStats(pokemon.stats) }}
             </td>
@@ -44,58 +73,64 @@
 
         <!-- Hp Column -->
         <ng-container matColumnDef="hp">
-            <th mat-header-cell *matHeaderCellDef>Hp</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hp</th>
             <td mat-cell *matCellDef="let pokemon">
-                {{ pokemon.stats[0].base_stat }}
+                {{ getSingleStat(pokemon.stats, "hp") }}
             </td>
         </ng-container>
 
         <!-- Attack Column -->
         <ng-container matColumnDef="atk">
-            <th mat-header-cell *matHeaderCellDef>Atk</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Atk</th>
             <td mat-cell *matCellDef="let pokemon">
-                {{ pokemon.stats[1].base_stat }}
+                {{ getSingleStat(pokemon.stats, "attack") }}
             </td>
         </ng-container>
 
         <!-- Defense Column -->
         <ng-container matColumnDef="def">
-            <th mat-header-cell *matHeaderCellDef>Atk</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Def</th>
             <td mat-cell *matCellDef="let pokemon">
-                {{ pokemon.stats[2].base_stat }}
+                {{ getSingleStat(pokemon.stats, "defense") }}
             </td>
         </ng-container>
 
         <!-- Special Attack Column -->
         <ng-container matColumnDef="spAtk">
-            <th mat-header-cell *matHeaderCellDef>Sp. Atk</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Sp. Atk</th>
             <td mat-cell *matCellDef="let pokemon">
-                {{ pokemon.stats[3].base_stat }}
+                {{ getSingleStat(pokemon.stats, "special-attack") }}
             </td>
         </ng-container>
 
         <!-- Special Defense Column -->
         <ng-container matColumnDef="spDef">
-            <th mat-header-cell *matHeaderCellDef>Sp. Def</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Sp. Def</th>
             <td mat-cell *matCellDef="let pokemon">
-                {{ pokemon.stats[4].base_stat }}
+                {{ getSingleStat(pokemon.stats, "special-defense") }}
             </td>
         </ng-container>
 
         <!-- Speed Column -->
         <ng-container matColumnDef="speed">
-            <th mat-header-cell *matHeaderCellDef>Speed</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Speed</th>
             <td mat-cell *matCellDef="let pokemon">
-                {{ pokemon.stats[5].base_stat }}
+                {{ getSingleStat(pokemon.stats, "speed") }}
             </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-
+    <div class="spinner-wrapper" *ngIf="dataIsLoading">
+        <mat-spinner></mat-spinner>
+    </div>
     <mat-paginator
-        [pageSizeOptions]="[10, 50, 200, 1000]"
+        class="paginator mat-elevation-z8"
+        [pageSizeOptions]="[20, 50, 200, 1000]"
         showFirstLastButtons
         aria-label="Select page of pokemons"
     ></mat-paginator>

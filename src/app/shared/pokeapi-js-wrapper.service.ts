@@ -10,10 +10,10 @@ export class PokeapiWrapperService {
     };
     pokeAPIWrapper = new Pokedex.Pokedex(this.customOptions);
 
-    getPokemonsList = async () => {
+    getPokemonsList = async (offset = 0, limit = 100000) => {
         const pokemonList = await this.pokeAPIWrapper.getPokemonsList({
-            offset: 0,
-            limit: 897,
+            offset,
+            limit,
         });
         return pokemonList;
     };

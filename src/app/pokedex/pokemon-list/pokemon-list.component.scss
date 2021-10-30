@@ -1,18 +1,28 @@
 .container {
-    max-width: 1200px;
-    margin: 3rem auto;
+    max-width: 70rem;
+    margin: 2rem auto;
+    padding-bottom: 2rem;
 }
 
 table {
     width: 100%;
 }
 
+.spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+}
+
 .mat-row .mat-cell {
     border: none;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
 }
 
 .mat-column-number {
-    width: 150px;
+    width: 9rem;
 }
 
 .mat-column-total,
@@ -26,18 +36,34 @@ table {
 }
 
 .icon-wrapper,
-.number {
+.order {
     display: inline-block;
     vertical-align: middle;
 }
 
 .icon-wrapper {
     margin-right: 0.25rem;
+    width: 68px;
+    height: 56px;
 }
 
 .icon {
     vertical-align: middle;
     position: relative;
-    top: -0.8rem;
+    top: -1rem;
     cursor: pointer;
+}
+
+.main-name {
+    margin-bottom: 0;
+    color: #ff8e84;
+    // color: $primary-dark;
+}
+
+.languages-names {
+    margin-right: 0.5rem;
+}
+
+.paginator {
+    border-top: solid 1px #ffffff1f;
 }
