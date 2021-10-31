@@ -1,5 +1,4 @@
 @use "~@angular/material" as mat;
-// @use "sass:map";
 @include mat.core();
 
 $primary: mat.define-palette(mat.$red-palette, 800);

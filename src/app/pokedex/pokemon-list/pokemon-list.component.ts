@@ -5,6 +5,7 @@ import { PokedexService } from '../pokedex.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
+import pokemonTypes from '../../shared/pokemonTypes.json';
 
 export interface Stat {
     base_stat: number;
@@ -16,6 +17,12 @@ export interface Name {
     languageCode: string;
 }
 
+export interface Type {
+    name: string;
+    frName: string;
+    color: string;
+}
+
 @Component({
     selector: 'app-pokemon-list',
     templateUrl: './pokemon-list.component.html',
@@ -25,6 +32,8 @@ export class PokemonListComponent implements OnInit {
     pokemonList = new MatTableDataSource<ReducedPokemon>([]);
     pokemonListSubscription: Subscription;
     sortedPokemonList: ReducedPokemon[];
+
+    pokemonTypes = pokemonTypes;
 
     dataIsLoading = true;
 
@@ -47,9 +56,23 @@ export class PokemonListComponent implements OnInit {
     constructor(private pokedexService: PokedexService) {}
 
     ngOnInit(): void {
+        console.log(this.pokemonTypes);
+
         this.pokemonList.paginator = this.paginator;
         this.paginator._intl.itemsPerPageLabel = 'Pokemons per page';
+
         this.pokemonList.sort = this.sort;
+
+        this.pokemonList.filterPredicate = (
+            data: ReducedPokemon,
+            filter: string
+        ) => {
+            let reducedMatchString = `${data.order}${data.form}`;
+            data.names.forEach((name: Name) => {
+                reducedMatchString += name.name.trim().toLocaleLowerCase();
+            });
+            return reducedMatchString.includes(filter);
+        };
 
         this.pokemonList.data = this.pokedexService.getPokemonList();
         if (this.pokemonList.data.length !== 0) this.dataIsLoading = false;
@@ -62,6 +85,15 @@ export class PokemonListComponent implements OnInit {
                 }
             );
     }
+
+    applyFilter = (event: Event) => {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.pokemonList.filter = filterValue.trim().toLocaleLowerCase();
+
+        if (this.pokemonList.paginator) {
+            this.pokemonList.paginator.firstPage();
+        }
+    };
 
     sortData = (sort: Sort) => {
         const data = this.pokedexService.getPokemonList();
@@ -78,7 +110,11 @@ export class PokemonListComponent implements OnInit {
                     case 'order':
                         return this.compare(a.order, b.order, isAsc);
                     case 'name':
-                        return this.compare(a.name, b.name, isAsc);
+                        return this.compare(
+                            this.getName(a.names, 'fr'),
+                            this.getName(b.names, 'fr'),
+                            isAsc
+                        );
                     case 'total':
                         return this.compare(
                             this.getTotalStats(a.stats),
@@ -133,11 +169,18 @@ export class PokemonListComponent implements OnInit {
     };
 
     getName = (names: Name[], languageCode: string) => {
-        return names.find((name) => name.languageCode === languageCode)!.name;
+        return names.find((name: Name) => name.languageCode === languageCode)!
+            .name;
     };
 
     getSingleStat = (stats: Stat[], statName: string) => {
         return stats.find((stat) => stat.name === statName)!.base_stat;
+    };
+
+    getType = (type: string) => {
+        return this.pokemonTypes.find(
+            (singleType: Type) => singleType.name === type
+        );
     };
 
     getTotalStats = (stats: Stat[]): number => {
@@ -147,15 +190,5 @@ export class PokemonListComponent implements OnInit {
         });
 
         return total;
-    };
-
-    getSimilarIcon = (index: number): string => {
-        const previousPokemonIcon =
-            this.pokedexService.getPokemonList()[index - 1].icon;
-        // console.log(previousPokemonIcon);
-
-        return previousPokemonIcon
-            ? previousPokemonIcon
-            : this.getSimilarIcon(index - 1);
     };
 }

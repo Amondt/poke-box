@@ -45,20 +45,30 @@ export class PokedexService {
                 )
                 .then((pokemonsByNameRes) => {
                     console.log('getPokemonByName: ok');
-                    this.pokeApiWrapperService
-                        .getPokemonSpeciesByName(
+                    Promise.all([
+                        this.pokeApiWrapperService.getPokemonSpeciesByName(
                             pokemonsByNameRes.map(
                                 (pokemon: any) => pokemon.species.name
                             )
-                        )
-                        .then((pokemonSpeciesByNamesRes) => {
+                        ),
+                        this.pokeApiWrapperService.getPokemonFormByName(
+                            pokemonsByNameRes.map(
+                                (pokemon: any) => pokemon.forms[0].name
+                            )
+                        ),
+                    ]).then(
+                        ([pokemonSpeciesByNamesRes, pokemonFormByNamesRes]) => {
                             console.log('getPokemonSpeciesByName: ok');
+                            console.log('getPokemonFormsByName: ok');
+
                             const pokemonsFinalList =
                                 pokemonsListRes.results.map(
                                     (pokemon: any, index: number) => {
                                         return {
-                                            ...pokemonSpeciesByNamesRes[index],
                                             ...pokemonsByNameRes[index],
+                                            species:
+                                                pokemonSpeciesByNamesRes[index],
+                                            forms: pokemonFormByNamesRes[index],
                                         };
                                     }
                                 );
@@ -66,7 +76,8 @@ export class PokedexService {
                             console.log('final list', pokemonsFinalList);
 
                             this.updateFirebaseDb(pokemonsFinalList);
-                        });
+                        }
+                    );
                 });
         });
     };
@@ -80,7 +91,7 @@ export class PokedexService {
 
         this.firebaseService.setFirebaseDoc(this.pokemonListRef, {
             list: pokemonsFinalList.map((pokemon: any) => {
-                const reducedNames = pokemon.names
+                const names = pokemon.species.names
                     .filter((name: any) => {
                         return (
                             name.language.name === 'fr' ||
@@ -96,26 +107,42 @@ export class PokedexService {
                         };
                     });
 
-                const reducedStats = pokemon.stats.map((stat: any) => {
+                const icon = pokemon.sprites.versions['generation-viii'].icons
+                    .front_default
+                    ? pokemon.sprites.versions['generation-viii'].icons
+                          .front_default
+                    : pokemonsFinalList.find(
+                          (singlePokemon) =>
+                              singlePokemon.species.name ===
+                              pokemon.species.name
+                      ).sprites.versions['generation-viii'].icons.front_default;
+
+                const stats = pokemon.stats.map((stat: any) => {
                     return {
                         base_stat: stat.base_stat,
                         name: stat.stat.name,
                     };
                 });
-                const reducedTypes = pokemon.types.map((type: any) => {
+                const types = pokemon.types.map((type: any) => {
                     return type.type.name;
                 });
 
                 return {
                     id: pokemon.id,
-                    order: pokemon.order,
-                    isDefault: pokemon.is_default,
+                    order: pokemon.species.order,
                     name: pokemon.name,
-                    names: reducedNames,
-                    icon: pokemon.sprites.versions['generation-viii'].icons
-                        .front_default,
-                    stats: reducedStats,
-                    types: reducedTypes,
+                    names,
+                    form: pokemon.forms.form_name,
+                    generation: pokemon.species.generation.name,
+                    icon,
+                    stats,
+                    types,
+                    isDefault: pokemon.is_default,
+                    isBattleOnly: pokemon.forms.is_battle_only,
+                    isMega: pokemon.forms.is_mega,
+                    isBaby: pokemon.species.is_baby,
+                    isLegendary: pokemon.species.is_legendary,
+                    isMythical: pokemon.species.is_mythical,
                 };
             }),
         });
@@ -138,10 +165,7 @@ export class PokedexService {
             if (doc.exists()) {
                 this.pokemonList = doc
                     .data()
-                    .list.filter(
-                        (pokemon: ReducedPokemon) => pokemon.order !== -1
-                    )
-                    .sort((a: ReducedPokemon, b: ReducedPokemon) =>
+                    .list.sort((a: ReducedPokemon, b: ReducedPokemon) =>
                         a.order < b.order ? -1 : 1
                     );
                 this.pokemonListUpdated.next(this.pokemonList.slice());

@@ -1,4 +1,14 @@
 <div class="container">
+    <mat-form-field appearance="outline" color="primary" class="search-field">
+        <mat-label>Filter</mat-label>
+        <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Enter your search term..."
+            #searchInput
+        />
+        <mat-hint>Search by name or by number</mat-hint>
+    </mat-form-field>
     <table
         mat-table
         [dataSource]="pokemonList"
@@ -9,25 +19,20 @@
         <!-- Order Column -->
         <ng-container matColumnDef="order">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-            <td mat-cell *matCellDef="let pokemon; let i = index">
+            <td mat-cell *matCellDef="let pokemon">
                 <span class="icon-wrapper">
                     <img
                         class="icon"
-                        [src]="
-                            pokemon.icon !== null
-                                ? pokemon.icon
-                                : getSimilarIcon(
-                                      i +
-                                          paginator.pageIndex *
-                                              paginator.pageSize
-                                  )
+                        [src]="pokemon.icon"
+                        [alt]="
+                            getName(pokemon.names, 'fr') + pokemon.form !== ''
+                                ? ' - ' + pokemon.form
+                                : ''
                         "
-                        [alt]="pokemon.name"
-                        [matTooltip]="pokemon.name"
+                        [matTooltip]="
+                            getName(pokemon.names, 'fr') + ' ' + pokemon.form
+                        "
                     />
-                    {{
-                        pokemon.icon === null ? pokemon.order + " // " + i : ""
-                    }}
                 </span>
                 <span class="order">
                     {{ pokemon.order | threeCharacterNumber }}
@@ -37,17 +42,22 @@
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
             <td mat-cell *matCellDef="let pokemon">
-                <a routerLink="/pokedex">
-                    <p class="main-name mat-subheading-2" color="accent">
-                        {{ pokemon.name | titlecase }}
-                    </p>
-                </a>
+                <p class="main-name">
+                    <a routerLink="/pokedex">
+                        <span class="specie mat-subheading-2">
+                            {{ getName(pokemon.names, "fr") }}
+                        </span>
+                    </a>
+                    <span class="form mat-subheading-2">
+                        {{ pokemon.form }}
+                    </span>
+                </p>
                 <span *ngFor="let name of pokemon.names">
                     <span
                         class="languages-names mat-caption"
-                        *ngIf="name.languageCode !== 'en'"
+                        *ngIf="name.languageCode !== 'fr'"
                     >
                         {{ name.name }}
                     </span>
@@ -59,7 +69,29 @@
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Type</th>
             <td mat-cell *matCellDef="let pokemon">
-                <p *ngFor="let type of pokemon.types">{{ type }}</p>
+                <div class="types-wrapper">
+                    <span
+                        class="type mat-caption"
+                        *ngFor="let type of pokemon.types"
+                        [ngStyle]="{ 'background-color': getType(type)!.color }"
+                    >
+                        <span class="type-icon-wrapper">
+                            <img
+                                class="type-icon"
+                                [src]="
+                                    '../../../assets/icons/' +
+                                    getType(type)!.name +
+                                    '_icon.webp'
+                                "
+                                [alt]="getType(type)!.name"
+                            />
+                        </span>
+                        <span class="type-name">
+                            {{ getType(type)!.frName | uppercase }}
+                        </span>
+                        <span class="spacing"></span>
+                    </span>
+                </div>
             </td>
         </ng-container>
 
@@ -124,13 +156,21 @@
             *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <div class="no-data-row-wrapper" *ngIf="!dataIsLoading">
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                    No data matching the filter "{{ searchInput.value }}"
+                </td>
+            </tr>
+        </div>
     </table>
     <div class="spinner-wrapper" *ngIf="dataIsLoading">
         <mat-spinner></mat-spinner>
     </div>
     <mat-paginator
         class="paginator mat-elevation-z8"
-        [pageSizeOptions]="[20, 50, 200, 1000]"
+        [pageSizeOptions]="[20, 50, 200]"
         showFirstLastButtons
         aria-label="Select page of pokemons"
     ></mat-paginator>

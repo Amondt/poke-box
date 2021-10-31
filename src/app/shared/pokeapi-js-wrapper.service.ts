@@ -25,4 +25,8 @@ export class PokeapiWrapperService {
     getPokemonSpeciesByName = async (names: string | string[]) => {
         return await this.pokeAPIWrapper.getPokemonSpeciesByName(names);
     };
+
+    getPokemonFormByName = async (names: string | string[]) => {
+        return await this.pokeAPIWrapper.getPokemonFormByName(names);
+    };
 }

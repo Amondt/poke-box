@@ -1,0 +1,20 @@
+[
+    { "name": "normal", "frName": "normal", "color": "#A8A878" },
+    { "name": "fire", "frName": "feu", "color": "#F08030" },
+    { "name": "fighting", "frName": "combat", "color": "#C03028" },
+    { "name": "water", "frName": "eau", "color": "#6890F0" },
+    { "name": "flying", "frName": "vol", "color": "#A890F0" },
+    { "name": "grass", "frName": "plante", "color": "#78C850" },
+    { "name": "poison", "frName": "poison", "color": "#A040A0" },
+    { "name": "electric", "frName": "électric", "color": "#F8D030" },
+    { "name": "ground", "frName": "sol", "color": "#E0C068" },
+    { "name": "psychic", "frName": "psy", "color": "#F85888" },
+    { "name": "rock", "frName": "roche", "color": "#B8A038" },
+    { "name": "ice", "frName": "glace", "color": "#98D8D8" },
+    { "name": "bug", "frName": "insecte", "color": "#A8B820" },
+    { "name": "dragon", "frName": "dragon", "color": "#7038F8" },
+    { "name": "ghost", "frName": "spectre", "color": "#705898" },
+    { "name": "dark", "frName": "ténèbres", "color": "#705848" },
+    { "name": "steel", "frName": "acier", "color": "#B8B8D0" },
+    { "name": "fairy", "frName": "fée", "color": "#EE99AC" }
+]

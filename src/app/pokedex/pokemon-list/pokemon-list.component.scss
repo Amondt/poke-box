@@ -1,7 +1,12 @@
 .container {
     max-width: 70rem;
-    margin: 2rem auto;
-    padding-bottom: 2rem;
+    margin: 1rem auto;
+    padding: 0 1rem 2rem 1rem;
+}
+
+.search-field {
+    margin-bottom: 0.5rem;
+    width: 20rem;
 }
 
 table {
@@ -50,18 +55,56 @@ table {
 .icon {
     vertical-align: middle;
     position: relative;
-    top: -1rem;
+    top: -0.5rem;
     cursor: pointer;
 }
 
 .main-name {
     margin-bottom: 0;
-    color: #ff8e84;
-    // color: $primary-dark;
+
+    .specie {
+        color: var(--primary-light);
+        margin-right: 0.5rem;
+    }
+
+    .form {
+        color: var(--text-light);
+    }
 }
 
 .languages-names {
     margin-right: 0.5rem;
+}
+
+.types-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.type {
+    font-size: 0.6rem;
+    text-align: center;
+    border-radius: 0.8rem;
+    width: 5rem;
+    display: flex;
+    align-items: center;
+}
+
+.type-icon-wrapper {
+    flex: 1;
+}
+
+.type-icon {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: auto;
+    margin-left: 0.1rem;
+}
+
+.spacing {
+    flex: 1;
 }
 
 .paginator {
