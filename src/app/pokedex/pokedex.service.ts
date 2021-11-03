@@ -167,7 +167,8 @@ export class PokedexService {
                     .data()
                     .list.sort((a: ReducedPokemon, b: ReducedPokemon) =>
                         a.order < b.order ? -1 : 1
-                    );
+                    )
+                    .slice(0, 10);
                 this.pokemonListUpdated.next(this.pokemonList.slice());
                 console.log('Data changed', this.pokemonList);
             }

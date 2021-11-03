@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ReducedPokemon } from '../../shared/reducedPokemon.model';
 import { PokedexService } from '../pokedex.service';
@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import pokemonTypes from '../../shared/pokemonTypes.json';
+import { FilterValues } from 'src/app/shared/filterValues.model';
 
 export interface Stat {
     base_stat: number;
@@ -33,6 +34,8 @@ export class PokemonListComponent implements OnInit {
     pokemonListSubscription: Subscription;
     sortedPokemonList: ReducedPokemon[];
 
+    filterValues: FilterValues;
+
     pokemonTypes = pokemonTypes;
 
     dataIsLoading = true;
@@ -50,33 +53,21 @@ export class PokemonListComponent implements OnInit {
         'speed',
     ];
 
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
     constructor(private pokedexService: PokedexService) {}
 
     ngOnInit(): void {
-        console.log(this.pokemonTypes);
-
         this.pokemonList.paginator = this.paginator;
         this.paginator._intl.itemsPerPageLabel = 'Pokemons per page';
 
         this.pokemonList.sort = this.sort;
 
-        this.pokemonList.filterPredicate = (
-            data: ReducedPokemon,
-            filter: string
-        ) => {
-            let reducedMatchString = `${data.order}${data.form}`;
-            data.names.forEach((name: Name) => {
-                reducedMatchString += name.name.trim().toLocaleLowerCase();
-            });
-            return reducedMatchString.includes(filter);
-        };
+        this.pokemonList.filterPredicate = this.customFilterPredicate;
 
         this.pokemonList.data = this.pokedexService.getPokemonList();
         if (this.pokemonList.data.length !== 0) this.dataIsLoading = false;
-
         this.pokemonListSubscription =
             this.pokedexService.pokemonListUpdated.subscribe(
                 (pokemonList: ReducedPokemon[]) => {
@@ -86,13 +77,58 @@ export class PokemonListComponent implements OnInit {
             );
     }
 
-    applyFilter = (event: Event) => {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.pokemonList.filter = filterValue.trim().toLocaleLowerCase();
+    applyFilters = (filterOptions: {
+        filterValues: FilterValues;
+        changedValue: string;
+    }) => {
+        const filterValues = filterOptions.filterValues;
+        const changedValue = filterOptions.changedValue;
+        this.filterValues = filterValues;
+        this.pokemonList.filter = changedValue;
+
+        console.log(
+            changedValue,
+            this.filterValues,
+            this.pokemonList.filteredData
+        );
+
+        // this.pokemonList.filter = filterValues.searchBar;
 
         if (this.pokemonList.paginator) {
             this.pokemonList.paginator.firstPage();
         }
+    };
+
+    customFilterPredicate = (data: ReducedPokemon, changedValue: string) => {
+        let reducedMatchString = `${data.order}${data.form}`;
+        data.names.forEach((name: Name) => {
+            reducedMatchString += name.name.trim().toLocaleLowerCase();
+        });
+
+        const globalMatch =
+            this.filterValues.searchBar !== ''
+                ? reducedMatchString.includes(this.filterValues.searchBar)
+                : false &&
+                  this.filterValues.firstType !== '' &&
+                  this.filterValues.firstType !== undefined
+                ? data.types[0] === this.filterValues.firstType
+                : false;
+        console.log(globalMatch, data.name);
+
+        return globalMatch;
+        // switch (changedValue) {
+        //     case 'searchBar':
+        //         let reducedMatchString = `${data.order}${data.form}`;
+        //         data.names.forEach((name: Name) => {
+        //             reducedMatchString += name.name.trim().toLocaleLowerCase();
+        //         });
+        //         return reducedMatchString.includes(this.filterValues.searchBar);
+        //     case 'firstType':
+        //         return data.types[0] === 'poison';
+        //     default:
+        //         return true;
+        // }
+        // return reducedMatchString.includes(filter);
     };
 
     sortData = (sort: Sort) => {
@@ -162,6 +198,8 @@ export class PokemonListComponent implements OnInit {
                 }
             }
         );
+
+        console.log(this.pokemonList.data);
     };
 
     compare = (a: number | string, b: number | string, isAsc: boolean) => {

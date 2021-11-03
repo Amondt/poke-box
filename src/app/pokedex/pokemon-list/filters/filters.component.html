@@ -1,0 +1,307 @@
+<form [formGroup]="filtersForm">
+    <!-- Search bar -->
+    <mat-form-field appearance="outline" color="primary" class="search-field">
+        <mat-label>Filter</mat-label>
+        <input
+            matInput
+            formControlName="searchBar"
+            (keyup)="applyFilter('searchBar')"
+            placeholder="Enter your search term..."
+        />
+        <mat-hint>Search by name or by number</mat-hint>
+    </mat-form-field>
+
+    <!-- Type 1 -->
+    <mat-form-field appearance="outline" color="primary" class="type">
+        <mat-label>Type</mat-label>
+        <mat-select
+            [(value)]="type1"
+            (selectionChange)="applyFilter('firstType')"
+            formControlName="firstType"
+        >
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let type of pokemonTypes" [value]="type.name">
+                {{ type.frName }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Type 2 -->
+    <mat-form-field appearance="outline" color="primary" class="type">
+        <mat-label>Type</mat-label>
+        <mat-select>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let type of pokemonTypes" [value]="type.name">
+                {{ type.frName }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Is battle only -->
+    <mat-checkbox>Battle only</mat-checkbox>
+
+    <!-- Is mega -->
+    <mat-checkbox>Mega</mat-checkbox>
+
+    <!-- Is legendary -->
+    <mat-checkbox>Legendary</mat-checkbox>
+
+    <!-- Is mythical -->
+    <mat-checkbox>Mythical</mat-checkbox>
+
+    <!-- Is baby -->
+    <mat-checkbox>Baby</mat-checkbox>
+
+    <!-- Advanced options -->
+    <mat-accordion>
+        <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+                <mat-panel-title> Advanced filters </mat-panel-title>
+                <mat-panel-description>
+                    Generations, stats, moves, abilities
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="advanced-filters-wrapper">
+                <!-- Generations -->
+                <div>
+                    <mat-checkbox>All</mat-checkbox>
+                    <ul>
+                        <li>
+                            <mat-checkbox>Generation I</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation II</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation III</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation IV</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation V</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation VI</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation VII</mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox>Generation VIII</mat-checkbox>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-wrapper">
+                    <!-- Hp -->
+                    <div class="stat-wrapper">
+                        <mat-button-toggle-group
+                            class="stat-comparison-wrapper"
+                        >
+                            <mat-button-toggle value="smaller">
+                                <
+                            </mat-button-toggle>
+                            <mat-button-toggle value="equal" checked>
+                                =
+                            </mat-button-toggle>
+                            <mat-button-toggle value="greater">
+                                >
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-form-field
+                            appearance="standard"
+                            color="primary"
+                            class="stat-input"
+                        >
+                            <mat-label>Hp</mat-label>
+                            <input matInput placeholder="0" type="number" />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Attack -->
+                    <div class="stat-wrapper">
+                        <mat-button-toggle-group
+                            class="stat-comparison-wrapper"
+                        >
+                            <mat-button-toggle value="smaller">
+                                <
+                            </mat-button-toggle>
+                            <mat-button-toggle value="equal" checked>
+                                =
+                            </mat-button-toggle>
+                            <mat-button-toggle value="greater">
+                                >
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-form-field
+                            appearance="standard"
+                            color="primary"
+                            class="stat-input"
+                        >
+                            <mat-label>Atk</mat-label>
+                            <input matInput placeholder="0" type="number" />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Defense -->
+                    <div class="stat-wrapper">
+                        <mat-button-toggle-group
+                            class="stat-comparison-wrapper"
+                        >
+                            <mat-button-toggle value="smaller">
+                                <
+                            </mat-button-toggle>
+                            <mat-button-toggle value="equal" checked>
+                                =
+                            </mat-button-toggle>
+                            <mat-button-toggle value="greater">
+                                >
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-form-field
+                            appearance="standard"
+                            color="primary"
+                            class="stat-input"
+                        >
+                            <mat-label>Def</mat-label>
+                            <input matInput placeholder="0" type="number" />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Speed -->
+                    <div class="stat-wrapper">
+                        <mat-button-toggle-group
+                            class="stat-comparison-wrapper"
+                        >
+                            <mat-button-toggle value="smaller">
+                                <
+                            </mat-button-toggle>
+                            <mat-button-toggle value="equal" checked>
+                                =
+                            </mat-button-toggle>
+                            <mat-button-toggle value="greater">
+                                >
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-form-field
+                            appearance="standard"
+                            color="primary"
+                            class="stat-input"
+                        >
+                            <mat-label>Speed</mat-label>
+                            <input matInput placeholder="0" type="number" />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Special attack -->
+                    <div class="stat-wrapper">
+                        <mat-button-toggle-group
+                            class="stat-comparison-wrapper"
+                        >
+                            <mat-button-toggle value="smaller">
+                                <
+                            </mat-button-toggle>
+                            <mat-button-toggle value="equal" checked>
+                                =
+                            </mat-button-toggle>
+                            <mat-button-toggle value="greater">
+                                >
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-form-field
+                            appearance="standard"
+                            color="primary"
+                            class="stat-input"
+                        >
+                            <mat-label>Sp. Atk</mat-label>
+                            <input matInput placeholder="0" type="number" />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Special defense -->
+                    <div class="stat-wrapper">
+                        <mat-button-toggle-group
+                            class="stat-comparison-wrapper"
+                        >
+                            <mat-button-toggle value="smaller">
+                                <
+                            </mat-button-toggle>
+                            <mat-button-toggle value="equal" checked>
+                                =
+                            </mat-button-toggle>
+                            <mat-button-toggle value="greater">
+                                >
+                            </mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-form-field
+                            appearance="standard"
+                            color="primary"
+                            class="stat-input"
+                        >
+                            <mat-label>Sp. Def</mat-label>
+                            <input matInput placeholder="0" type="number" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="moves-abilities-wrapper">
+                    <!-- Move 1 -->
+                    <mat-form-field
+                        appearance="outline"
+                        color="primary"
+                        class="move"
+                    >
+                        <mat-label>Move</mat-label>
+                        <mat-select>
+                            <mat-option>None</mat-option>
+                            <mat-option
+                                *ngFor="let type of pokemonTypes"
+                                [value]="type.name"
+                            >
+                                {{ type.frName }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Move 2 -->
+                    <mat-form-field
+                        appearance="outline"
+                        color="primary"
+                        class="move"
+                    >
+                        <mat-label>Move</mat-label>
+                        <mat-select>
+                            <mat-option>None</mat-option>
+                            <mat-option
+                                *ngFor="let type of pokemonTypes"
+                                [value]="type.name"
+                            >
+                                {{ type.frName }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Ability -->
+                    <mat-form-field
+                        appearance="outline"
+                        color="primary"
+                        class="move"
+                    >
+                        <mat-label>Ability</mat-label>
+                        <mat-select>
+                            <mat-option>None</mat-option>
+                            <mat-option
+                                *ngFor="let type of pokemonTypes"
+                                [value]="type.name"
+                            >
+                                {{ type.frName }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>

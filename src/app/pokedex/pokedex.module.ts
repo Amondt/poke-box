@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { PokedexComponent } from './pokedex.component';
 import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
-import { MaterialModule } from '../material/material.module';
 import { SharedModule } from '../shared/shared.module';
+import { FiltersComponent } from './pokemon-list/filters/filters.component';
 
 @NgModule({
-    declarations: [PokedexComponent, PokemonListComponent],
+    declarations: [PokedexComponent, PokemonListComponent, FiltersComponent],
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         RouterModule.forChild([{ path: '', component: PokedexComponent }]),
-        MaterialModule,
         SharedModule,
     ],
 })

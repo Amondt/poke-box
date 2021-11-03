@@ -1,14 +1,5 @@
 <div class="container">
-    <mat-form-field appearance="outline" color="primary" class="search-field">
-        <mat-label>Filter</mat-label>
-        <input
-            matInput
-            (keyup)="applyFilter($event)"
-            placeholder="Enter your search term..."
-            #searchInput
-        />
-        <mat-hint>Search by name or by number</mat-hint>
-    </mat-form-field>
+    <app-filters (onApplyFilters)="applyFilters($event)"></app-filters>
     <table
         mat-table
         [dataSource]="pokemonList"
@@ -160,7 +151,7 @@
         <div class="no-data-row-wrapper" *ngIf="!dataIsLoading">
             <tr class="mat-row" *matNoDataRow>
                 <td class="mat-cell" colspan="4">
-                    No data matching the filter "{{ searchInput.value }}"
+                    No data matching the filter
                 </td>
             </tr>
         </div>
