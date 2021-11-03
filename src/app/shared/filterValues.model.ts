@@ -1,4 +1,5 @@
 export interface FilterValues {
-    searchBar: '';
-    firstType: '';
+    searchBar: string;
+    firstType: string;
+    secondType: string;
 }

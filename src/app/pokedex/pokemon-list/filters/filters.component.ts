@@ -15,7 +15,6 @@ export class FiltersComponent implements OnInit {
     }>();
 
     pokemonTypes = pokemonTypes;
-    type1: string = '';
 
     filtersForm: FormGroup;
 
@@ -25,6 +24,7 @@ export class FiltersComponent implements OnInit {
         this.filtersForm = this.fb.group({
             searchBar: '',
             firstType: '',
+            secondType: '',
         });
     }
 

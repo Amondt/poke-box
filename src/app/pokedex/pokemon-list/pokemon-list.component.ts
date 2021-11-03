@@ -105,30 +105,57 @@ export class PokemonListComponent implements OnInit {
             reducedMatchString += name.name.trim().toLocaleLowerCase();
         });
 
-        const globalMatch =
-            this.filterValues.searchBar !== ''
-                ? reducedMatchString.includes(this.filterValues.searchBar)
-                : false &&
-                  this.filterValues.firstType !== '' &&
-                  this.filterValues.firstType !== undefined
-                ? data.types[0] === this.filterValues.firstType
-                : false;
+        const searchBarMatch = reducedMatchString.includes(
+            this.filterValues.searchBar
+        );
+
+        let typeMatch = true;
+        if (
+            this.filterValues.firstType !== '' &&
+            this.filterValues.firstType !== undefined
+        ) {
+            typeMatch =
+                typeMatch &&
+                data.types.some(
+                    (type: string) => type === this.filterValues.firstType
+                );
+        }
+        if (
+            this.filterValues.secondType !== '' &&
+            this.filterValues.secondType !== undefined
+        ) {
+            typeMatch =
+                typeMatch &&
+                data.types.some(
+                    (type: string) => type === this.filterValues.secondType
+                );
+        }
+
+        console.log('type match', typeMatch);
+        // if (
+        //     this.filterValues.firstType !== '' &&
+        //     this.filterValues.firstType !== undefined &&
+        //     this.filterValues.secondType !== '' &&
+        //     this.filterValues.secondType !== undefined
+        // ) {
+        //     console.log('2 types');
+        //     const typesMatch = data.types[0]
+        // } else if (
+
+        // )
+        // const firstTypeMatch =
+        //     this.filterValues.firstType !== '' &&
+        //     this.filterValues.firstType !== undefined
+        //         ? data.types[0] === this.filterValues.firstType
+        //         : true;
+
+        // const secondTypeMatch =
+
+        const globalMatch = searchBarMatch && typeMatch;
+
         console.log(globalMatch, data.name);
 
         return globalMatch;
-        // switch (changedValue) {
-        //     case 'searchBar':
-        //         let reducedMatchString = `${data.order}${data.form}`;
-        //         data.names.forEach((name: Name) => {
-        //             reducedMatchString += name.name.trim().toLocaleLowerCase();
-        //         });
-        //         return reducedMatchString.includes(this.filterValues.searchBar);
-        //     case 'firstType':
-        //         return data.types[0] === 'poison';
-        //     default:
-        //         return true;
-        // }
-        // return reducedMatchString.includes(filter);
     };
 
     sortData = (sort: Sort) => {
