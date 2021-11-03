@@ -86,13 +86,11 @@ export class PokemonListComponent implements OnInit {
         this.filterValues = filterValues;
         this.pokemonList.filter = changedValue;
 
-        console.log(
-            changedValue,
-            this.filterValues,
-            this.pokemonList.filteredData
-        );
-
-        // this.pokemonList.filter = filterValues.searchBar;
+        // console.log(
+        //     changedValue,
+        //     this.filterValues,
+        //     this.pokemonList.filteredData
+        // );
 
         if (this.pokemonList.paginator) {
             this.pokemonList.paginator.firstPage();
@@ -131,29 +129,82 @@ export class PokemonListComponent implements OnInit {
                 );
         }
 
-        console.log('type match', typeMatch);
-        // if (
-        //     this.filterValues.firstType !== '' &&
-        //     this.filterValues.firstType !== undefined &&
-        //     this.filterValues.secondType !== '' &&
-        //     this.filterValues.secondType !== undefined
-        // ) {
-        //     console.log('2 types');
-        //     const typesMatch = data.types[0]
-        // } else if (
+        const battleOnlyMatch = this.filterValues.isFilters.isBattleOnly
+            ? true
+            : data.isBattleOnly === false;
 
-        // )
-        // const firstTypeMatch =
-        //     this.filterValues.firstType !== '' &&
-        //     this.filterValues.firstType !== undefined
-        //         ? data.types[0] === this.filterValues.firstType
-        //         : true;
+        const megaMatch = this.filterValues.isFilters.isMega
+            ? true
+            : data.isMega === false;
 
-        // const secondTypeMatch =
+        const legendaryMatch = this.filterValues.isFilters.isLegendary
+            ? true
+            : data.isLegendary === false;
 
-        const globalMatch = searchBarMatch && typeMatch;
+        const mythicalMatch = this.filterValues.isFilters.isMythical
+            ? true
+            : data.isMythical === false;
 
-        console.log(globalMatch, data.name);
+        const babyMatch = this.filterValues.isFilters.isBaby
+            ? true
+            : data.isBaby === false;
+
+        const generationIMatch = this.filterValues.generationFilters.generationI
+            ? true
+            : data.generation !== 'generation-i';
+
+        const generationIIMatch = this.filterValues.generationFilters
+            .generationII
+            ? true
+            : data.generation !== 'generation-ii';
+
+        const generationIIIMatch = this.filterValues.generationFilters
+            .generationIII
+            ? true
+            : data.generation !== 'generation-iii';
+
+        const generationIVMatch = this.filterValues.generationFilters
+            .generationIV
+            ? true
+            : data.generation !== 'generation-iv';
+
+        const generationVMatch = this.filterValues.generationFilters.generationV
+            ? true
+            : data.generation !== 'generation-v';
+
+        const generationVIMatch = this.filterValues.generationFilters
+            .generationVI
+            ? true
+            : data.generation !== 'generation-vi';
+
+        const generationVIIMatch = this.filterValues.generationFilters
+            .generationVII
+            ? true
+            : data.generation !== 'generation-vii';
+
+        const generationVIIIMatch = this.filterValues.generationFilters
+            .generationVIII
+            ? true
+            : data.generation !== 'generation-viii';
+
+        const globalMatch =
+            searchBarMatch &&
+            typeMatch &&
+            battleOnlyMatch &&
+            megaMatch &&
+            legendaryMatch &&
+            mythicalMatch &&
+            babyMatch &&
+            generationIMatch &&
+            generationIIMatch &&
+            generationIIIMatch &&
+            generationIVMatch &&
+            generationVMatch &&
+            generationVIMatch &&
+            generationVIIMatch &&
+            generationVIIIMatch;
+
+        // console.log(battleOnlyMatch, data.name);
 
         return globalMatch;
     };

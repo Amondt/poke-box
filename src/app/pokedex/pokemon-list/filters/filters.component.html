@@ -39,20 +39,41 @@
         </mat-select>
     </mat-form-field>
 
-    <!-- Is battle only -->
-    <mat-checkbox>Battle only</mat-checkbox>
+    <span formGroupName="isFilters">
+        <!-- Is battle only -->
+        <mat-checkbox
+            formControlName="isBattleOnly"
+            (change)="applyFilter('isBattleOnly')"
+        >
+            Battle only
+        </mat-checkbox>
 
-    <!-- Is mega -->
-    <mat-checkbox>Mega</mat-checkbox>
+        <!-- Is mega -->
+        <mat-checkbox formControlName="isMega" (change)="applyFilter('isMega')">
+            Mega
+        </mat-checkbox>
 
-    <!-- Is legendary -->
-    <mat-checkbox>Legendary</mat-checkbox>
+        <!-- Is legendary -->
+        <mat-checkbox
+            formControlName="isLegendary"
+            (change)="applyFilter('isLegendary')"
+        >
+            Legendary
+        </mat-checkbox>
 
-    <!-- Is mythical -->
-    <mat-checkbox>Mythical</mat-checkbox>
+        <!-- Is mythical -->
+        <mat-checkbox
+            formControlName="isMythical"
+            (change)="applyFilter('isMythical')"
+        >
+            Mythical
+        </mat-checkbox>
 
-    <!-- Is baby -->
-    <mat-checkbox>Baby</mat-checkbox>
+        <!-- Is baby -->
+        <mat-checkbox formControlName="isBaby" (change)="applyFilter('isBaby')">
+            Baby
+        </mat-checkbox>
+    </span>
 
     <!-- Advanced options -->
     <mat-accordion>
@@ -64,33 +85,72 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div class="advanced-filters-wrapper">
-                <!-- Generations -->
-                <div>
+                <div formGroupName="generationFilters">
                     <mat-checkbox>All</mat-checkbox>
                     <ul>
                         <li>
-                            <mat-checkbox>Generation I</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationI"
+                                (change)="applyFilter('generationI')"
+                            >
+                                Generation I
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation II</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationII"
+                                (change)="applyFilter('generationII')"
+                            >
+                                Generation II
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation III</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationIII"
+                                (change)="applyFilter('generationIII')"
+                            >
+                                Generation III
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation IV</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationIV"
+                                (change)="applyFilter('generationIV')"
+                            >
+                                Generation IV
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation V</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationV"
+                                (change)="applyFilter('generationV')"
+                            >
+                                Generation V
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation VI</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationVI"
+                                (change)="applyFilter('generationVI')"
+                            >
+                                Generation VI
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation VII</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationVII"
+                                (change)="applyFilter('generationVII')"
+                            >
+                                Generation VII
+                            </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox>Generation VIII</mat-checkbox>
+                            <mat-checkbox
+                                formControlName="generationVIII"
+                                (change)="applyFilter('generationVIII')"
+                            >
+                                Generation VIII
+                            </mat-checkbox>
                         </li>
                     </ul>
                 </div>

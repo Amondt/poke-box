@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import pokemonTypes from '../../../shared/pokemonTypes.json';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { FilterValues } from 'src/app/shared/filterValues.model';
 
 @Component({
@@ -25,7 +25,26 @@ export class FiltersComponent implements OnInit {
             searchBar: '',
             firstType: '',
             secondType: '',
+            isFilters: this.fb.group({
+                isBattleOnly: true,
+                isMega: true,
+                isLegendary: true,
+                isMythical: true,
+                isBaby: true,
+            }),
+            generationFilters: this.fb.group({
+                generationI: true,
+                generationII: true,
+                generationIII: true,
+                generationIV: true,
+                generationV: true,
+                generationVI: true,
+                generationVII: true,
+                generationVIII: true,
+            }),
         });
+
+        console.log(this.filtersForm.value);
     }
 
     applyFilter = (changedValue: string) => {
