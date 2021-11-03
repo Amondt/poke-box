@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ReducedPokemon } from '../../shared/reducedPokemon.model';
 import { PokedexService } from '../pokedex.service';
@@ -86,11 +86,11 @@ export class PokemonListComponent implements OnInit {
         this.filterValues = filterValues;
         this.pokemonList.filter = changedValue;
 
-        // console.log(
-        //     changedValue,
-        //     this.filterValues,
-        //     this.pokemonList.filteredData
-        // );
+        console.log(
+            changedValue,
+            this.filterValues,
+            this.pokemonList.filteredData
+        );
 
         if (this.pokemonList.paginator) {
             this.pokemonList.paginator.firstPage();
@@ -187,6 +187,18 @@ export class PokemonListComponent implements OnInit {
             ? true
             : data.generation !== 'generation-viii';
 
+        const hpMatch = this.compairStats('hp', data);
+
+        const attackMatch = this.compairStats('attack', data);
+
+        const defenseMatch = this.compairStats('defense', data);
+
+        const speedMatch = this.compairStats('speed', data);
+
+        const specialAttackMatch = this.compairStats('special-attack', data);
+
+        const specialDefenseMatch = this.compairStats('special-defense', data);
+
         const globalMatch =
             searchBarMatch &&
             typeMatch &&
@@ -202,11 +214,51 @@ export class PokemonListComponent implements OnInit {
             generationVMatch &&
             generationVIMatch &&
             generationVIIMatch &&
-            generationVIIIMatch;
+            generationVIIIMatch &&
+            hpMatch &&
+            attackMatch &&
+            defenseMatch &&
+            speedMatch &&
+            specialAttackMatch &&
+            specialDefenseMatch;
 
         // console.log(battleOnlyMatch, data.name);
 
         return globalMatch;
+    };
+
+    compairStats = (stat: string, data: ReducedPokemon) => {
+        // @ts-ignore
+        const statFilter = this.filterValues.statFilters[stat];
+        if (statFilter.value !== null) {
+            switch (statFilter.comparisonSign) {
+                case 'smaller':
+                    return (
+                        (
+                            data.stats.find(
+                                (singleStat) => singleStat.name === stat
+                            ) as Stat
+                        ).base_stat < statFilter.value
+                    );
+                case 'equal':
+                    return (
+                        (
+                            data.stats.find(
+                                (singleStat) => singleStat.name === stat
+                            ) as Stat
+                        ).base_stat === statFilter.value
+                    );
+                case 'greater':
+                    return (
+                        (
+                            data.stats.find(
+                                (singleStat) => singleStat.name === stat
+                            ) as Stat
+                        ).base_stat > statFilter.value
+                    );
+            }
+        }
+        return true;
     };
 
     sortData = (sort: Sort) => {

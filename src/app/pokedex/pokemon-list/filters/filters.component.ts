@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import pokemonTypes from '../../../shared/pokemonTypes.json';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { FilterValues } from 'src/app/shared/filterValues.model';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-filters',
@@ -42,10 +43,63 @@ export class FiltersComponent implements OnInit {
                 generationVII: true,
                 generationVIII: true,
             }),
+            statFilters: this.fb.group({
+                hp: this.fb.group({
+                    value: null,
+                    comparisonSign: 'equal',
+                }),
+                attack: this.fb.group({
+                    value: null,
+                    comparisonSign: 'equal',
+                }),
+                defense: this.fb.group({
+                    value: null,
+                    comparisonSign: 'equal',
+                }),
+                speed: this.fb.group({
+                    value: null,
+                    comparisonSign: 'equal',
+                }),
+                'special-attack': this.fb.group({
+                    value: null,
+                    comparisonSign: 'equal',
+                }),
+                'special-defense': this.fb.group({
+                    value: null,
+                    comparisonSign: 'equal',
+                }),
+            }),
         });
 
         console.log(this.filtersForm.value);
     }
+
+    controlCheckboxStatus = (group: string, type: string) => {
+        const resArray = [];
+        const object = (this.filtersForm.get(group) as FormGroup).value;
+        for (const property in object) {
+            resArray.push(object[property]);
+        }
+        if (type === 'indeterminate') {
+            return (
+                !resArray.every((res) => res === true) &&
+                !resArray.every((res) => res === false)
+            );
+        } else {
+            return (
+                resArray.some((res) => res === true) ||
+                !resArray.some((res) => res === false)
+            );
+        }
+    };
+
+    checkAll = (event: MatCheckboxChange, group: string) => {
+        const formGroup = this.filtersForm.get(group) as FormGroup;
+        for (const property in formGroup.value) {
+            (formGroup.get(property) as FormControl).setValue(event.checked);
+        }
+        this.applyFilter(group);
+    };
 
     applyFilter = (changedValue: string) => {
         const searchBar = <FormControl>this.filtersForm.get('searchBar');

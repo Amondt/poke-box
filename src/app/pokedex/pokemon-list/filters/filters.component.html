@@ -40,6 +40,16 @@
     </mat-form-field>
 
     <span formGroupName="isFilters">
+        <mat-checkbox
+            [indeterminate]="
+                controlCheckboxStatus('isFilters', 'indeterminate')
+            "
+            [checked]="controlCheckboxStatus('isFilters', 'checked')"
+            (change)="checkAll($event, 'isFilters')"
+        >
+            All
+        </mat-checkbox>
+
         <!-- Is battle only -->
         <mat-checkbox
             formControlName="isBattleOnly"
@@ -86,14 +96,30 @@
             </mat-expansion-panel-header>
             <div class="advanced-filters-wrapper">
                 <div formGroupName="generationFilters">
-                    <mat-checkbox>All</mat-checkbox>
+                    <mat-checkbox
+                        [indeterminate]="
+                            controlCheckboxStatus(
+                                'generationFilters',
+                                'indeterminate'
+                            )
+                        "
+                        [checked]="
+                            controlCheckboxStatus(
+                                'generationFilters',
+                                'checked'
+                            )
+                        "
+                        (change)="checkAll($event, 'generationFilters')"
+                    >
+                        All
+                    </mat-checkbox>
                     <ul>
                         <li>
                             <mat-checkbox
                                 formControlName="generationI"
                                 (change)="applyFilter('generationI')"
                             >
-                                Generation I
+                                Gen. I
                             </mat-checkbox>
                         </li>
                         <li>
@@ -101,7 +127,7 @@
                                 formControlName="generationII"
                                 (change)="applyFilter('generationII')"
                             >
-                                Generation II
+                                Gen. II
                             </mat-checkbox>
                         </li>
                         <li>
@@ -109,7 +135,7 @@
                                 formControlName="generationIII"
                                 (change)="applyFilter('generationIII')"
                             >
-                                Generation III
+                                Gen. III
                             </mat-checkbox>
                         </li>
                         <li>
@@ -117,7 +143,7 @@
                                 formControlName="generationIV"
                                 (change)="applyFilter('generationIV')"
                             >
-                                Generation IV
+                                Gen. IV
                             </mat-checkbox>
                         </li>
                         <li>
@@ -125,7 +151,7 @@
                                 formControlName="generationV"
                                 (change)="applyFilter('generationV')"
                             >
-                                Generation V
+                                Gen. V
                             </mat-checkbox>
                         </li>
                         <li>
@@ -133,7 +159,7 @@
                                 formControlName="generationVI"
                                 (change)="applyFilter('generationVI')"
                             >
-                                Generation VI
+                                Gen. VI
                             </mat-checkbox>
                         </li>
                         <li>
@@ -141,7 +167,7 @@
                                 formControlName="generationVII"
                                 (change)="applyFilter('generationVII')"
                             >
-                                Generation VII
+                                Gen. VII
                             </mat-checkbox>
                         </li>
                         <li>
@@ -149,23 +175,25 @@
                                 formControlName="generationVIII"
                                 (change)="applyFilter('generationVIII')"
                             >
-                                Generation VIII
+                                Gen. VIII
                             </mat-checkbox>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Stats -->
-                <div class="stats-wrapper">
+                <div class="stats-wrapper" formGroupName="statFilters">
                     <!-- Hp -->
-                    <div class="stat-wrapper">
+                    <div class="stat-wrapper" formGroupName="hp">
                         <mat-button-toggle-group
                             class="stat-comparison-wrapper"
+                            formControlName="comparisonSign"
+                            (change)="applyFilter('hp')"
                         >
                             <mat-button-toggle value="smaller">
                                 <
                             </mat-button-toggle>
-                            <mat-button-toggle value="equal" checked>
+                            <mat-button-toggle value="equal">
                                 =
                             </mat-button-toggle>
                             <mat-button-toggle value="greater">
@@ -177,20 +205,28 @@
                             color="primary"
                             class="stat-input"
                         >
-                            <mat-label>Hp</mat-label>
-                            <input matInput placeholder="0" type="number" />
+                            <mat-label> Hp </mat-label>
+                            <input
+                                matInput
+                                placeholder="0"
+                                type="number"
+                                formControlName="value"
+                                (keyup)="applyFilter('hp')"
+                            />
                         </mat-form-field>
                     </div>
 
                     <!-- Attack -->
-                    <div class="stat-wrapper">
+                    <div class="stat-wrapper" formGroupName="attack">
                         <mat-button-toggle-group
                             class="stat-comparison-wrapper"
+                            formControlName="comparisonSign"
+                            (change)="applyFilter('attack')"
                         >
                             <mat-button-toggle value="smaller">
                                 <
                             </mat-button-toggle>
-                            <mat-button-toggle value="equal" checked>
+                            <mat-button-toggle value="equal">
                                 =
                             </mat-button-toggle>
                             <mat-button-toggle value="greater">
@@ -202,20 +238,28 @@
                             color="primary"
                             class="stat-input"
                         >
-                            <mat-label>Atk</mat-label>
-                            <input matInput placeholder="0" type="number" />
+                            <mat-label> Atk </mat-label>
+                            <input
+                                matInput
+                                placeholder="0"
+                                type="number"
+                                formControlName="value"
+                                (keyup)="applyFilter('attack')"
+                            />
                         </mat-form-field>
                     </div>
 
                     <!-- Defense -->
-                    <div class="stat-wrapper">
+                    <div class="stat-wrapper" formGroupName="defense">
                         <mat-button-toggle-group
                             class="stat-comparison-wrapper"
+                            formControlName="comparisonSign"
+                            (change)="applyFilter('defense')"
                         >
                             <mat-button-toggle value="smaller">
                                 <
                             </mat-button-toggle>
-                            <mat-button-toggle value="equal" checked>
+                            <mat-button-toggle value="equal">
                                 =
                             </mat-button-toggle>
                             <mat-button-toggle value="greater">
@@ -227,20 +271,28 @@
                             color="primary"
                             class="stat-input"
                         >
-                            <mat-label>Def</mat-label>
-                            <input matInput placeholder="0" type="number" />
+                            <mat-label> Def </mat-label>
+                            <input
+                                matInput
+                                placeholder="0"
+                                type="number"
+                                formControlName="value"
+                                (keyup)="applyFilter('defense')"
+                            />
                         </mat-form-field>
                     </div>
 
                     <!-- Speed -->
-                    <div class="stat-wrapper">
+                    <div class="stat-wrapper" formGroupName="speed">
                         <mat-button-toggle-group
                             class="stat-comparison-wrapper"
+                            formControlName="comparisonSign"
+                            (change)="applyFilter('speed')"
                         >
                             <mat-button-toggle value="smaller">
                                 <
                             </mat-button-toggle>
-                            <mat-button-toggle value="equal" checked>
+                            <mat-button-toggle value="equal">
                                 =
                             </mat-button-toggle>
                             <mat-button-toggle value="greater">
@@ -252,20 +304,28 @@
                             color="primary"
                             class="stat-input"
                         >
-                            <mat-label>Speed</mat-label>
-                            <input matInput placeholder="0" type="number" />
+                            <mat-label> Speed </mat-label>
+                            <input
+                                matInput
+                                placeholder="0"
+                                type="number"
+                                formControlName="value"
+                                (keyup)="applyFilter('speed')"
+                            />
                         </mat-form-field>
                     </div>
 
                     <!-- Special attack -->
-                    <div class="stat-wrapper">
+                    <div class="stat-wrapper" formGroupName="special-attack">
                         <mat-button-toggle-group
                             class="stat-comparison-wrapper"
+                            formControlName="comparisonSign"
+                            (change)="applyFilter('special-attack')"
                         >
                             <mat-button-toggle value="smaller">
                                 <
                             </mat-button-toggle>
-                            <mat-button-toggle value="equal" checked>
+                            <mat-button-toggle value="equal">
                                 =
                             </mat-button-toggle>
                             <mat-button-toggle value="greater">
@@ -277,20 +337,28 @@
                             color="primary"
                             class="stat-input"
                         >
-                            <mat-label>Sp. Atk</mat-label>
-                            <input matInput placeholder="0" type="number" />
+                            <mat-label> Sp. Atk </mat-label>
+                            <input
+                                matInput
+                                placeholder="0"
+                                type="number"
+                                formControlName="value"
+                                (keyup)="applyFilter('special-attack')"
+                            />
                         </mat-form-field>
                     </div>
 
                     <!-- Special defense -->
-                    <div class="stat-wrapper">
+                    <div class="stat-wrapper" formGroupName="special-defense">
                         <mat-button-toggle-group
                             class="stat-comparison-wrapper"
+                            formControlName="comparisonSign"
+                            (change)="applyFilter('special-defense')"
                         >
                             <mat-button-toggle value="smaller">
                                 <
                             </mat-button-toggle>
-                            <mat-button-toggle value="equal" checked>
+                            <mat-button-toggle value="equal">
                                 =
                             </mat-button-toggle>
                             <mat-button-toggle value="greater">
@@ -302,8 +370,14 @@
                             color="primary"
                             class="stat-input"
                         >
-                            <mat-label>Sp. Def</mat-label>
-                            <input matInput placeholder="0" type="number" />
+                            <mat-label> Sp. Def </mat-label>
+                            <input
+                                matInput
+                                placeholder="0"
+                                type="number"
+                                formControlName="value"
+                                (keyup)="applyFilter('special-defense')"
+                            />
                         </mat-form-field>
                     </div>
                 </div>
