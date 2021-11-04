@@ -94,20 +94,14 @@ export class PokemonListComponent implements OnInit, OnDestroy {
         );
 
         let typeMatch = true;
-        if (
-            this.filterValues.firstType !== '' &&
-            this.filterValues.firstType !== undefined
-        ) {
+        if (this.filterValues.firstType) {
             typeMatch =
                 typeMatch &&
                 data.types.some(
                     (type: string) => type === this.filterValues.firstType
                 );
         }
-        if (
-            this.filterValues.secondType !== '' &&
-            this.filterValues.secondType !== undefined
-        ) {
+        if (this.filterValues.secondType) {
             typeMatch =
                 typeMatch &&
                 data.types.some(
@@ -185,6 +179,26 @@ export class PokemonListComponent implements OnInit, OnDestroy {
 
         const specialDefenseMatch = this.compairStats('special-defense', data);
 
+        let moveMatch = true;
+        if (this.filterValues.firstMove) {
+            moveMatch =
+                moveMatch &&
+                data.moves.some(
+                    (move: string) => move === this.filterValues.firstMove
+                );
+        }
+        if (this.filterValues.secondMove) {
+            moveMatch =
+                moveMatch &&
+                data.moves.some(
+                    (move: string) => move === this.filterValues.secondMove
+                );
+        }
+
+        const abilityMatch = data.abilities.some(
+            (ability: string) => ability === this.filterValues.ability
+        );
+
         const globalMatch =
             searchBarMatch &&
             typeMatch &&
@@ -206,9 +220,9 @@ export class PokemonListComponent implements OnInit, OnDestroy {
             defenseMatch &&
             speedMatch &&
             specialAttackMatch &&
-            specialDefenseMatch;
-
-        // console.log(battleOnlyMatch, data.name);
+            specialDefenseMatch &&
+            moveMatch &&
+            abilityMatch;
 
         return globalMatch;
     };

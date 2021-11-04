@@ -8,6 +8,8 @@ export interface ReducedPokemon {
     generation: string;
     stats: { name: string; base_stat: number }[];
     types: string[];
+    moves: string[];
+    abilities: string[];
     isDefault: boolean;
     isBattleOnly: boolean;
     isMega: boolean;

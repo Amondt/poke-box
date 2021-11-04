@@ -39,4 +39,15 @@ export class PokeapiWrapperService {
     getMoveByName = async (names: string | string[]) => {
         return await this.pokeAPIWrapper.getMoveByName(names);
     };
+
+    getAbilitiesList = async (offset = 0, limit = 10000) => {
+        return await this.pokeAPIWrapper.getAbilitiesList({
+            offset,
+            limit,
+        });
+    };
+
+    getAbilityByName = async (names: string | string[]) => {
+        return await this.pokeAPIWrapper.getAbilityByName(names);
+    };
 }

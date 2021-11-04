@@ -389,15 +389,45 @@
                         color="primary"
                         class="move"
                     >
-                        <mat-label>Move</mat-label>
-                        <mat-select>
-                            <mat-option>None</mat-option>
-                            <mat-option
-                                *ngFor="let move of movesList"
-                                [value]="move.name"
+                        <mat-label> Move </mat-label>
+                        <mat-select
+                            formControlName="firstMove"
+                            (selectionChange)="applyFilter('firstMove')"
+                        >
+                            <div
+                                class="spinner-wrapper"
+                                *ngIf="movesDataIsLoading"
                             >
-                                {{ move.names | getSingleValue: "fr":"name" }}
-                            </mat-option>
+                                <mat-spinner></mat-spinner>
+                            </div>
+                            <div
+                                class="optionsWrapper"
+                                [hidden]="movesDataIsLoading"
+                            >
+                                <mat-option> None </mat-option>
+                                <mat-option
+                                    *ngFor="let move of movesList"
+                                    [value]="move.name"
+                                >
+                                    {{
+                                        move.names | getSingleValue: "fr":"name"
+                                    }}
+                                    <span
+                                        class="icon-wrapper"
+                                        *ngIf="move.damageClass"
+                                    >
+                                        <img
+                                            class="icon"
+                                            [src]="
+                                                '../../../assets/icons/' +
+                                                move.damageClass +
+                                                '_icon.png'
+                                            "
+                                            [alt]="move.damageClass"
+                                        />
+                                    </span>
+                                </mat-option>
+                            </div>
                         </mat-select>
                     </mat-form-field>
 
@@ -407,15 +437,45 @@
                         color="primary"
                         class="move"
                     >
-                        <mat-label>Move</mat-label>
-                        <mat-select>
-                            <mat-option>None</mat-option>
-                            <mat-option
-                                *ngFor="let move of movesList"
-                                [value]="move.name"
+                        <mat-label> Move </mat-label>
+                        <mat-select
+                            formControlName="secondMove"
+                            (selectionChange)="applyFilter('secondMove')"
+                        >
+                            <div
+                                class="spinner-wrapper"
+                                *ngIf="movesDataIsLoading"
                             >
-                                {{ move.names | getSingleValue: "fr":"name" }}
-                            </mat-option>
+                                <mat-spinner></mat-spinner>
+                            </div>
+                            <div
+                                class="optionsWrapper"
+                                [hidden]="movesDataIsLoading"
+                            >
+                                <mat-option> None </mat-option>
+                                <mat-option
+                                    *ngFor="let move of movesList"
+                                    [value]="move.name"
+                                >
+                                    {{
+                                        move.names | getSingleValue: "fr":"name"
+                                    }}
+                                    <span
+                                        class="icon-wrapper"
+                                        *ngIf="move.damageClass"
+                                    >
+                                        <img
+                                            class="icon"
+                                            [src]="
+                                                '../../../assets/icons/' +
+                                                move.damageClass +
+                                                '_icon.png'
+                                            "
+                                            [alt]="move.damageClass"
+                                        />
+                                    </span>
+                                </mat-option>
+                            </div>
                         </mat-select>
                     </mat-form-field>
 
@@ -423,17 +483,34 @@
                     <mat-form-field
                         appearance="outline"
                         color="primary"
-                        class="move"
+                        class="ability"
                     >
-                        <mat-label>Ability</mat-label>
-                        <mat-select>
-                            <mat-option>None</mat-option>
-                            <mat-option
-                                *ngFor="let type of pokemonTypes"
-                                [value]="type.name"
+                        <mat-label> Ability </mat-label>
+                        <mat-select
+                            formControlName="ability"
+                            (selectionChange)="applyFilter('ability')"
+                        >
+                            <div
+                                class="spinner-wrapper"
+                                *ngIf="abilitiesDataIsLoading"
                             >
-                                {{ type.frName }}
-                            </mat-option>
+                                <mat-spinner></mat-spinner>
+                            </div>
+                            <div
+                                class="optionsWrapper"
+                                [hidden]="abilitiesDataIsLoading"
+                            >
+                                <mat-option> None </mat-option>
+                                <mat-option
+                                    *ngFor="let ability of abilitiesList"
+                                    [value]="ability.name"
+                                >
+                                    {{
+                                        ability.names
+                                            | getSingleValue: "fr":"name"
+                                    }}
+                                </mat-option>
+                            </div>
                         </mat-select>
                     </mat-form-field>
                 </div>

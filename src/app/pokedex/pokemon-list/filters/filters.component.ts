@@ -12,7 +12,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReducedMove } from 'src/app/shared/models/reduced-move.model';
 import { Subscription } from 'rxjs';
 import { PokedexService } from '../../pokedex.service';
-import { SingleName } from 'src/app/shared/models/single-name.model';
+import { ReducedAbility } from 'src/app/shared/models/reduced-ability.model';
 
 @Component({
     selector: 'app-filters',
@@ -22,6 +22,11 @@ import { SingleName } from 'src/app/shared/models/single-name.model';
 export class FiltersComponent implements OnInit, OnDestroy {
     movesList: ReducedMove[];
     movesListSubscription: Subscription;
+    movesDataIsLoading = true;
+
+    abilitiesList: ReducedAbility[];
+    abilitiesListSubscription: Subscription;
+    abilitiesDataIsLoading = true;
 
     @Output() onApplyFilters = new EventEmitter<{
         ['filterValues']: FilterValues;
@@ -85,13 +90,30 @@ export class FiltersComponent implements OnInit, OnDestroy {
                     comparisonSign: 'equal',
                 }),
             }),
+            firstMove: '',
+            secondMove: '',
+            ability: '',
         });
 
         this.movesList = this.pokedexService.getMovesList();
+        if (this.movesList.length > 0) this.movesDataIsLoading = false;
         this.movesListSubscription =
             this.pokedexService.movesListUpdated.subscribe(
                 (movesList: ReducedMove[]) => {
                     this.movesList = movesList;
+                    if (this.movesList.length > 0)
+                        this.movesDataIsLoading = false;
+                }
+            );
+
+        this.abilitiesList = this.pokedexService.getAbilitiesList();
+        if (this.abilitiesList.length > 0) this.abilitiesDataIsLoading = false;
+        this.abilitiesListSubscription =
+            this.pokedexService.abilitiesListUpdated.subscribe(
+                (abilitiesList: ReducedAbility[]) => {
+                    this.abilitiesList = abilitiesList;
+                    if (this.abilitiesList.length > 0)
+                        this.abilitiesDataIsLoading = false;
                 }
             );
     }
@@ -135,5 +157,6 @@ export class FiltersComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.movesListSubscription.unsubscribe();
+        this.abilitiesListSubscription.unsubscribe();
     }
 }

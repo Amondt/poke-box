@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReducedPokemon } from '../shared/models/reduced-pokemon.model';
 import { ReducedMove } from '../shared/models/reduced-move.model';
+import { ReducedAbility } from '../shared/models/reduced-ability.model';
 import { Subject } from 'rxjs';
 import { PokeapiWrapperService } from '../shared/services/pokeapi-js-wrapper.service';
 import { FirebaseService } from '../shared/services/firebase.service';
@@ -13,6 +14,9 @@ export class PokedexService {
 
     private movesList: ReducedMove[] = [];
     movesListUpdated = new Subject<ReducedMove[]>();
+
+    private abilitiesList: ReducedAbility[] = [];
+    abilitiesListUpdated = new Subject<ReducedAbility[]>();
 
     pokemonListFirstPartRef = this.firebaseService.createFirebaseRef(
         'pokedex',
@@ -30,6 +34,10 @@ export class PokedexService {
         'pokedex',
         'movesReducedList'
     );
+    abilitiesReducedListRef = this.firebaseService.createFirebaseRef(
+        'pokedex',
+        'abilitiesReducedList'
+    );
 
     constructor(
         private firebaseService: FirebaseService,
@@ -45,8 +53,26 @@ export class PokedexService {
     getFullDataFromPokeApi = async () => {
         const pokemonsFinalList = await this.getPokemonsFromPokeApi();
         const movesFinalList = await this.getMovesFromPokeApi();
+        const abilitiesFinalList = await this.getAbilitiesFromPokeApi();
 
-        this.updateFirebaseDb(pokemonsFinalList, movesFinalList);
+        this.updateFirebaseDb(
+            pokemonsFinalList,
+            movesFinalList,
+            abilitiesFinalList
+        );
+    };
+
+    getAbilitiesFromPokeApi = async () => {
+        console.log('getting abilities list');
+        const abilitiesList =
+            await this.pokeApiWrapperService.getAbilitiesList();
+
+        console.log('getting abilities by name');
+        const abilitiesByName =
+            await this.pokeApiWrapperService.getAbilityByName(
+                abilitiesList.results.map((ability: any) => ability.name)
+            );
+        return abilitiesByName;
     };
 
     getMovesFromPokeApi = async () => {
@@ -80,7 +106,6 @@ export class PokedexService {
             ),
         ]);
 
-        console.log('building final list');
         const pokemonsFinalList = pokemonsList.results.map(
             (pokemon: any, index: number) => {
                 return {
@@ -94,11 +119,22 @@ export class PokedexService {
     };
 
     updateFirebaseDb = (
-        pokemonsFinalList: any[] = [],
-        movesFinalList: any[]
+        pokemonsFinalList: any[],
+        movesFinalList: any[],
+        abilitiesFinalList: any[]
     ) => {
         console.log('updating firebase');
 
+        this.firebaseService.setFirebaseDoc(this.pokedexConfigRef, {
+            lastUpdated: Timestamp.now(),
+        });
+
+        this.updateFirebasePokemons(pokemonsFinalList);
+        this.updateFirebaseMoves(movesFinalList);
+        this.updateFirebaseAbilities(abilitiesFinalList);
+    };
+
+    updateFirebasePokemons = (pokemonsFinalList: any[]) => {
         const reducedPokemonList = pokemonsFinalList.map((pokemon: any) => {
             const names = pokemon.species.names
                 .filter((name: any) => {
@@ -164,10 +200,6 @@ export class PokedexService {
             };
         });
 
-        this.firebaseService.setFirebaseDoc(this.pokedexConfigRef, {
-            lastUpdated: Timestamp.now(),
-        });
-
         this.firebaseService.setFirebaseDoc(this.pokemonListFirstPartRef, {
             list: reducedPokemonList.slice(0, 500),
         });
@@ -187,7 +219,9 @@ export class PokedexService {
                 pokemon
             );
         });
+    };
 
+    updateFirebaseMoves = (movesFinalList: any[]) => {
         const reducedMovesList = movesFinalList.map((move: any) => {
             const names = move.names
                 .filter((name: any) => {
@@ -231,6 +265,53 @@ export class PokedexService {
         });
     };
 
+    updateFirebaseAbilities = (abilitiesFinalList: any[]) => {
+        let abilitiesFinalSortedList = abilitiesFinalList.filter(
+            (ability) => ability.is_main_series
+        );
+        const reducedAbilitiesList = abilitiesFinalSortedList.map(
+            (ability: any) => {
+                const names = ability.names
+                    .filter((name: any) => {
+                        return (
+                            name.language.name === 'fr' ||
+                            name.language.name === 'en' ||
+                            name.language.name === 'de' ||
+                            name.language.name === 'ja'
+                        );
+                    })
+                    .map((name: any) => {
+                        return {
+                            name: name.name,
+                            languageCode: name.language.name,
+                        };
+                    });
+
+                return {
+                    name: ability.name,
+                    id: ability.id,
+                    names,
+                };
+            }
+        );
+
+        this.firebaseService.setFirebaseDoc(this.abilitiesReducedListRef, {
+            list: reducedAbilitiesList,
+        });
+
+        abilitiesFinalList.forEach((ability: any) => {
+            this.firebaseService.setFirebaseDoc(
+                this.firebaseService.createFirebaseRef(
+                    'pokedex',
+                    'abilitiesList',
+                    'abilities',
+                    ability.name
+                ),
+                ability
+            );
+        });
+    };
+
     setPokemonList = (pokemonList: ReducedPokemon[]) => {
         this.pokemonList = pokemonList;
         this.pokemonListUpdated.next(this.pokemonList.slice());
@@ -247,5 +328,14 @@ export class PokedexService {
 
     getMovesList = () => {
         return this.movesList.slice();
+    };
+
+    setAbilitiesList = (abilitiesList: ReducedAbility[]) => {
+        this.abilitiesList = abilitiesList;
+        this.abilitiesListUpdated.next(this.abilitiesList.slice());
+    };
+
+    getAbilitiesList = () => {
+        return this.abilitiesList.slice();
     };
 }

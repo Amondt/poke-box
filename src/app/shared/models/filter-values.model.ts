@@ -45,4 +45,7 @@ export interface FilterValues {
             comparisonSign: string;
         };
     };
+    firstMove: string;
+    secondMove: string;
+    ability: string;
 }
