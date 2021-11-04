@@ -1,38 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ReducedPokemon } from '../../shared/reducedPokemon.model';
+import { ReducedPokemon } from '../../shared/models/reduced-pokemon.model';
 import { PokedexService } from '../pokedex.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
-import pokemonTypes from '../../shared/pokemonTypes.json';
-import { FilterValues } from 'src/app/shared/filterValues.model';
-
-export interface Stat {
-    base_stat: number;
-    name: string;
-}
-
-export interface Name {
-    name: string;
-    languageCode: string;
-}
-
-export interface Type {
-    name: string;
-    frName: string;
-    color: string;
-}
+import pokemonTypes from '../../shared/json/pokemonTypes.json';
+import { FilterValues } from 'src/app/shared/models/filter-values.model';
+import { SingleName } from 'src/app/shared/models/single-name.model';
+import { SingleStat } from 'src/app/shared/models/single-stat.model';
+import { SingleType } from 'src/app/shared/models/single-type.model';
 
 @Component({
     selector: 'app-pokemon-list',
     templateUrl: './pokemon-list.component.html',
     styleUrls: ['./pokemon-list.component.scss'],
 })
-export class PokemonListComponent implements OnInit {
+export class PokemonListComponent implements OnInit, OnDestroy {
     pokemonList = new MatTableDataSource<ReducedPokemon>([]);
     pokemonListSubscription: Subscription;
-    sortedPokemonList: ReducedPokemon[];
 
     filterValues: FilterValues;
 
@@ -99,7 +85,7 @@ export class PokemonListComponent implements OnInit {
 
     customFilterPredicate = (data: ReducedPokemon, changedValue: string) => {
         let reducedMatchString = `${data.order}${data.form}`;
-        data.names.forEach((name: Name) => {
+        data.names.forEach((name: SingleName) => {
             reducedMatchString += name.name.trim().toLocaleLowerCase();
         });
 
@@ -237,7 +223,7 @@ export class PokemonListComponent implements OnInit {
                         (
                             data.stats.find(
                                 (singleStat) => singleStat.name === stat
-                            ) as Stat
+                            ) as SingleStat
                         ).base_stat < statFilter.value
                     );
                 case 'equal':
@@ -245,7 +231,7 @@ export class PokemonListComponent implements OnInit {
                         (
                             data.stats.find(
                                 (singleStat) => singleStat.name === stat
-                            ) as Stat
+                            ) as SingleStat
                         ).base_stat === statFilter.value
                     );
                 case 'greater':
@@ -253,7 +239,7 @@ export class PokemonListComponent implements OnInit {
                         (
                             data.stats.find(
                                 (singleStat) => singleStat.name === stat
-                            ) as Stat
+                            ) as SingleStat
                         ).base_stat > statFilter.value
                     );
             }
@@ -336,27 +322,25 @@ export class PokemonListComponent implements OnInit {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     };
 
-    getName = (names: Name[], languageCode: string) => {
-        return names.find((name: Name) => name.languageCode === languageCode)!
-            .name;
+    getName = (names: SingleName[], languageCode: string) => {
+        return names.find(
+            (name: SingleName) => name.languageCode === languageCode
+        )!.name;
     };
 
-    getSingleStat = (stats: Stat[], statName: string) => {
+    getSingleStat = (stats: SingleStat[], statName: string) => {
         return stats.find((stat) => stat.name === statName)!.base_stat;
     };
 
-    getType = (type: string) => {
-        return this.pokemonTypes.find(
-            (singleType: Type) => singleType.name === type
+    getTotalStats = (stats: SingleStat[]): number => {
+        return stats.reduce(
+            (accumulator: number, current: SingleStat) =>
+                accumulator + current.base_stat,
+            0
         );
     };
 
-    getTotalStats = (stats: Stat[]): number => {
-        let total = 0;
-        stats.forEach((stat: Stat) => {
-            total += stat.base_stat;
-        });
-
-        return total;
-    };
+    ngOnDestroy() {
+        this.pokemonListSubscription.unsubscribe();
+    }
 }

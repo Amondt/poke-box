@@ -1,15 +1,28 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import pokemonTypes from '../../../shared/pokemonTypes.json';
+import {
+    Component,
+    EventEmitter,
+    OnDestroy,
+    OnInit,
+    Output,
+} from '@angular/core';
+import pokemonTypes from '../../../shared/json/pokemonTypes.json';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { FilterValues } from 'src/app/shared/filterValues.model';
+import { FilterValues } from 'src/app/shared/models/filter-values.model';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { ReducedMove } from 'src/app/shared/models/reduced-move.model';
+import { Subscription } from 'rxjs';
+import { PokedexService } from '../../pokedex.service';
+import { SingleName } from 'src/app/shared/models/single-name.model';
 
 @Component({
     selector: 'app-filters',
     templateUrl: './filters.component.html',
     styleUrls: ['./filters.component.scss'],
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent implements OnInit, OnDestroy {
+    movesList: ReducedMove[];
+    movesListSubscription: Subscription;
+
     @Output() onApplyFilters = new EventEmitter<{
         ['filterValues']: FilterValues;
         ['changedValue']: string;
@@ -19,7 +32,10 @@ export class FiltersComponent implements OnInit {
 
     filtersForm: FormGroup;
 
-    constructor(private fb: FormBuilder) {}
+    constructor(
+        private fb: FormBuilder,
+        private pokedexService: PokedexService
+    ) {}
 
     ngOnInit(): void {
         this.filtersForm = this.fb.group({
@@ -71,7 +87,13 @@ export class FiltersComponent implements OnInit {
             }),
         });
 
-        console.log(this.filtersForm.value);
+        this.movesList = this.pokedexService.getMovesList();
+        this.movesListSubscription =
+            this.pokedexService.movesListUpdated.subscribe(
+                (movesList: ReducedMove[]) => {
+                    this.movesList = movesList;
+                }
+            );
     }
 
     controlCheckboxStatus = (group: string, type: string) => {
@@ -110,4 +132,8 @@ export class FiltersComponent implements OnInit {
             changedValue,
         });
     };
+
+    ngOnDestroy() {
+        this.movesListSubscription.unsubscribe();
+    }
 }

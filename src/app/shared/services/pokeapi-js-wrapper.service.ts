@@ -11,11 +11,10 @@ export class PokeapiWrapperService {
     pokeAPIWrapper = new Pokedex.Pokedex(this.customOptions);
 
     getPokemonsList = async (offset = 0, limit = 100000) => {
-        const pokemonList = await this.pokeAPIWrapper.getPokemonsList({
+        return await this.pokeAPIWrapper.getPokemonsList({
             offset,
             limit,
         });
-        return pokemonList;
     };
 
     getPokemonByName = async (names: string | string[]) => {
@@ -28,5 +27,16 @@ export class PokeapiWrapperService {
 
     getPokemonFormByName = async (names: string | string[]) => {
         return await this.pokeAPIWrapper.getPokemonFormByName(names);
+    };
+
+    getMovesList = async (offset = 0, limit = 10000) => {
+        return await this.pokeAPIWrapper.getMovesList({
+            offset,
+            limit,
+        });
+    };
+
+    getMoveByName = async (names: string | string[]) => {
+        return await this.pokeAPIWrapper.getMoveByName(names);
     };
 }

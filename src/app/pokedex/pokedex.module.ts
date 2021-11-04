@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { PokedexComponent } from './pokedex.component';
 import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../shared/modules/shared.module';
 import { FiltersComponent } from './pokemon-list/filters/filters.component';
 
 @NgModule({

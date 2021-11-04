@@ -393,10 +393,10 @@
                         <mat-select>
                             <mat-option>None</mat-option>
                             <mat-option
-                                *ngFor="let type of pokemonTypes"
-                                [value]="type.name"
+                                *ngFor="let move of movesList"
+                                [value]="move.name"
                             >
-                                {{ type.frName }}
+                                {{ move.names | getSingleValue: "fr":"name" }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -411,10 +411,10 @@
                         <mat-select>
                             <mat-option>None</mat-option>
                             <mat-option
-                                *ngFor="let type of pokemonTypes"
-                                [value]="type.name"
+                                *ngFor="let move of movesList"
+                                [value]="move.name"
                             >
-                                {{ type.frName }}
+                                {{ move.names | getSingleValue: "fr":"name" }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
