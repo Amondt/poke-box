@@ -5,14 +5,17 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import pokemonTypes from '../../../shared/json/pokemonTypes.json';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { FilterValues } from 'src/app/shared/models/filter-values.model';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { ReducedMove } from 'src/app/shared/models/reduced-move.model';
 import { Subscription } from 'rxjs';
-import { PokedexService } from '../../pokedex.service';
+
+import { FilterValues } from 'src/app/shared/models/filter-values.model';
+import { ReducedMove } from 'src/app/shared/models/reduced-move.model';
 import { ReducedAbility } from 'src/app/shared/models/reduced-ability.model';
+
+import { PokedexService } from '../../pokedex.service';
+
+import pokemonTypes from '../../../shared/json/pokemonTypes.json';
 
 @Component({
     selector: 'app-filters',

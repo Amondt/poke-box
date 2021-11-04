@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
 import { ReducedPokemon } from '../shared/models/reduced-pokemon.model';
 import { ReducedMove } from '../shared/models/reduced-move.model';
 import { ReducedAbility } from '../shared/models/reduced-ability.model';
-import { Subject } from 'rxjs';
+
 import { PokeapiWrapperService } from '../shared/services/pokeapi-js-wrapper.service';
 import { FirebaseService } from '../shared/services/firebase.service';
+
 import { Timestamp } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import pokemonTypes from '../json/pokemonTypes.json';
 import { SingleType } from '../models/single-type.model';
+import pokemonTypes from '../json/pokemonTypes.json';
 
 @Pipe({
     name: 'getTypeValue',

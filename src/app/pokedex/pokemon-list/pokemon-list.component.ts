@@ -1,15 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ReducedPokemon } from '../../shared/models/reduced-pokemon.model';
-import { PokedexService } from '../pokedex.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
-import pokemonTypes from '../../shared/json/pokemonTypes.json';
+import { Subscription } from 'rxjs';
+
+import { ReducedPokemon } from '../../shared/models/reduced-pokemon.model';
 import { FilterValues } from 'src/app/shared/models/filter-values.model';
 import { SingleName } from 'src/app/shared/models/single-name.model';
 import { SingleStat } from 'src/app/shared/models/single-stat.model';
-import { SingleType } from 'src/app/shared/models/single-type.model';
+
+import { PokedexService } from '../pokedex.service';
+
+import pokemonTypes from '../../shared/json/pokemonTypes.json';
 
 @Component({
     selector: 'app-pokemon-list',

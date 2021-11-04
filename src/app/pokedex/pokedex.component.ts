@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { ReducedPokemon } from '../shared/models/reduced-pokemon.model';
 import { ReducedMove } from '../shared/models/reduced-move.model';
 import { ReducedAbility } from '../shared/models/reduced-ability.model';
+
 import { FirebaseService } from '../shared/services/firebase.service';
 import { PokedexService } from './pokedex.service';
+
 import {
     onSnapshot,
     query,
