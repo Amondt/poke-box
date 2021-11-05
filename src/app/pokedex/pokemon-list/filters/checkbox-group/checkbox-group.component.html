@@ -1,0 +1,20 @@
+<span [formGroupName]="groupName">
+    <mat-checkbox
+        [indeterminate]="controlCheckboxStatus(groupName, 'indeterminate')"
+        [checked]="controlCheckboxStatus(groupName, 'checked')"
+        (change)="checkAll($event, groupName)"
+    >
+        All
+    </mat-checkbox>
+
+    <ul>
+        <li *ngFor="let controlName of controlNames">
+            <mat-checkbox
+                [formControlName]="controlName"
+                (change)="onApplyFilter(controlName)"
+            >
+                {{ controlName }}
+            </mat-checkbox>
+        </li>
+    </ul>
+</span>

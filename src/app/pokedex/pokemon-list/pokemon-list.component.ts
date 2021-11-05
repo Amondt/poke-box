@@ -65,7 +65,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
             );
     }
 
-    applyFilters = (filterOptions: {
+    onApplyFilters = (filterOptions: {
         filterValues: FilterValues;
         changedValue: string;
     }) => {
@@ -75,6 +75,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
         this.pokemonList.filter = changedValue;
 
         console.log(
+            this.pokemonList.filter,
             changedValue,
             this.filterValues,
             this.pokemonList.filteredData
@@ -92,7 +93,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
         });
 
         const searchBarMatch = reducedMatchString.includes(
-            this.filterValues.searchBar
+            this.filterValues.searchBar.trim().toLocaleLowerCase()
         );
 
         let typeMatch = true;
@@ -197,9 +198,11 @@ export class PokemonListComponent implements OnInit, OnDestroy {
                 );
         }
 
-        const abilityMatch = data.abilities.some(
-            (ability: string) => ability === this.filterValues.ability
-        );
+        const abilityMatch = this.filterValues.ability
+            ? data.abilities.some(
+                  (ability: string) => ability === this.filterValues.ability
+              )
+            : true;
 
         const globalMatch =
             searchBarMatch &&
@@ -231,7 +234,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
 
     compairStats = (stat: string, data: ReducedPokemon) => {
         // @ts-ignore
-        const statFilter = this.filterValues.statFilters[stat];
+        const statFilter = this.filterValues[stat];
         if (statFilter.value !== null) {
             switch (statFilter.comparisonSign) {
                 case 'smaller':

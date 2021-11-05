@@ -1,0 +1,23 @@
+<!-- <span [formGroup]="searchBarGroup">
+    <mat-form-field appearance="outline" color="primary" class="search-field">
+        <mat-label> Filter </mat-label>
+        <input
+            matInput
+            formControlName="searchBar"
+            placeholder="Enter your search term..."
+            (keyup)="onApplyFilter('searchBar')"
+        />
+        <mat-hint> Search by name or by number </mat-hint>
+    </mat-form-field>
+</span> -->
+
+<mat-form-field appearance="outline" color="primary" class="search-field">
+    <mat-label> Filter </mat-label>
+    <input
+        matInput
+        [formControlName]="controlName"
+        placeholder="Enter your search term..."
+        (keyup)="onApplyFilter('searchBar')"
+    />
+    <mat-hint> Search by name or by number </mat-hint>
+</mat-form-field>

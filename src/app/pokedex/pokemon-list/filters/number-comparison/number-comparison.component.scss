@@ -1,0 +1,18 @@
+.stat-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.stat-comparison-wrapper {
+    height: 2rem;
+    align-items: center;
+}
+
+.stat-input {
+    width: 5rem;
+
+    ::-webkit-outer-spin-button,
+    ::-webkit-inner-spin-button {
+        display: none;
+    }
+}

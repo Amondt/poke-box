@@ -1,0 +1,21 @@
+<div class="stat-wrapper" [formGroupName]="groupName">
+    <mat-button-toggle-group
+        class="stat-comparison-wrapper"
+        formControlName="comparisonSign"
+        (change)="onApplyFilter(groupName)"
+    >
+        <mat-button-toggle value="smaller"> < </mat-button-toggle>
+        <mat-button-toggle value="equal"> = </mat-button-toggle>
+        <mat-button-toggle value="greater"> > </mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-form-field appearance="standard" color="primary" class="stat-input">
+        <mat-label>{{ label }}</mat-label>
+        <input
+            matInput
+            placeholder="0"
+            type="number"
+            formControlName="value"
+            (keyup)="onApplyFilter(groupName)"
+        />
+    </mat-form-field>
+</div>

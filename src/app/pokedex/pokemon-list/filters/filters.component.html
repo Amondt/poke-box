@@ -1,89 +1,36 @@
 <form [formGroup]="filtersForm">
     <!-- Search bar -->
-    <mat-form-field appearance="outline" color="primary" class="search-field">
-        <mat-label>Filter</mat-label>
-        <input
-            matInput
-            formControlName="searchBar"
-            (keyup)="applyFilter('searchBar')"
-            placeholder="Enter your search term..."
-        />
-        <mat-hint>Search by name or by number</mat-hint>
-    </mat-form-field>
+    <!-- <app-search-bar
+        (formReady)="onFormReady('searchBarGroup', $event)"
+        (applyFilter)="onApplyFilter($event)"
+    ></app-search-bar> -->
+    <app-search-bar
+        controlName="searchBar"
+        (applyFilter)="onApplyFilter($event)"
+    ></app-search-bar>
 
     <!-- Type 1 -->
-    <mat-form-field appearance="outline" color="primary" class="type">
-        <mat-label>Type</mat-label>
-        <mat-select
-            (selectionChange)="applyFilter('firstType')"
-            formControlName="firstType"
-        >
-            <mat-option>None</mat-option>
-            <mat-option *ngFor="let type of pokemonTypes" [value]="type.name">
-                {{ type.frName }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <app-select
+        (applyFilter)="onApplyFilter($event)"
+        controlName="firstType"
+        label="type"
+        [optionsArray]="pokemonTypes"
+    ></app-select>
 
     <!-- Type 2 -->
-    <mat-form-field appearance="outline" color="primary" class="type">
-        <mat-label>Type</mat-label>
-        <mat-select
-            (selectionChange)="applyFilter('secondType')"
-            formControlName="secondType"
-        >
-            <mat-option>None</mat-option>
-            <mat-option *ngFor="let type of pokemonTypes" [value]="type.name">
-                {{ type.frName }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <app-select
+        (applyFilter)="onApplyFilter($event)"
+        controlName="secondType"
+        label="type"
+        [optionsArray]="pokemonTypes"
+    ></app-select>
 
-    <span formGroupName="isFilters">
-        <mat-checkbox
-            [indeterminate]="
-                controlCheckboxStatus('isFilters', 'indeterminate')
-            "
-            [checked]="controlCheckboxStatus('isFilters', 'checked')"
-            (change)="checkAll($event, 'isFilters')"
-        >
-            All
-        </mat-checkbox>
-
-        <!-- Is battle only -->
-        <mat-checkbox
-            formControlName="isBattleOnly"
-            (change)="applyFilter('isBattleOnly')"
-        >
-            Battle only
-        </mat-checkbox>
-
-        <!-- Is mega -->
-        <mat-checkbox formControlName="isMega" (change)="applyFilter('isMega')">
-            Mega
-        </mat-checkbox>
-
-        <!-- Is legendary -->
-        <mat-checkbox
-            formControlName="isLegendary"
-            (change)="applyFilter('isLegendary')"
-        >
-            Legendary
-        </mat-checkbox>
-
-        <!-- Is mythical -->
-        <mat-checkbox
-            formControlName="isMythical"
-            (change)="applyFilter('isMythical')"
-        >
-            Mythical
-        </mat-checkbox>
-
-        <!-- Is baby -->
-        <mat-checkbox formControlName="isBaby" (change)="applyFilter('isBaby')">
-            Baby
-        </mat-checkbox>
-    </span>
+    <!-- 'is' filters -->
+    <app-checkbox-group
+        (applyFilter)="onApplyFilter($event)"
+        [mainForm]="filtersForm"
+        groupName="isFilters"
+    ></app-checkbox-group>
 
     <!-- Advanced options -->
     <mat-accordion>
@@ -95,424 +42,83 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div class="advanced-filters-wrapper">
-                <div formGroupName="generationFilters">
-                    <mat-checkbox
-                        [indeterminate]="
-                            controlCheckboxStatus(
-                                'generationFilters',
-                                'indeterminate'
-                            )
-                        "
-                        [checked]="
-                            controlCheckboxStatus(
-                                'generationFilters',
-                                'checked'
-                            )
-                        "
-                        (change)="checkAll($event, 'generationFilters')"
-                    >
-                        All
-                    </mat-checkbox>
-                    <ul>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationI"
-                                (change)="applyFilter('generationI')"
-                            >
-                                Gen. I
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationII"
-                                (change)="applyFilter('generationII')"
-                            >
-                                Gen. II
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationIII"
-                                (change)="applyFilter('generationIII')"
-                            >
-                                Gen. III
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationIV"
-                                (change)="applyFilter('generationIV')"
-                            >
-                                Gen. IV
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationV"
-                                (change)="applyFilter('generationV')"
-                            >
-                                Gen. V
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationVI"
-                                (change)="applyFilter('generationVI')"
-                            >
-                                Gen. VI
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationVII"
-                                (change)="applyFilter('generationVII')"
-                            >
-                                Gen. VII
-                            </mat-checkbox>
-                        </li>
-                        <li>
-                            <mat-checkbox
-                                formControlName="generationVIII"
-                                (change)="applyFilter('generationVIII')"
-                            >
-                                Gen. VIII
-                            </mat-checkbox>
-                        </li>
-                    </ul>
-                </div>
+                <!-- Generations filter -->
+                <app-checkbox-group
+                    (applyFilter)="onApplyFilter($event)"
+                    [mainForm]="filtersForm"
+                    groupName="generationFilters"
+                ></app-checkbox-group>
 
                 <!-- Stats -->
-                <div class="stats-wrapper" formGroupName="statFilters">
+                <div class="stats-wrapper">
                     <!-- Hp -->
-                    <div class="stat-wrapper" formGroupName="hp">
-                        <mat-button-toggle-group
-                            class="stat-comparison-wrapper"
-                            formControlName="comparisonSign"
-                            (change)="applyFilter('hp')"
-                        >
-                            <mat-button-toggle value="smaller">
-                                <
-                            </mat-button-toggle>
-                            <mat-button-toggle value="equal">
-                                =
-                            </mat-button-toggle>
-                            <mat-button-toggle value="greater">
-                                >
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <mat-form-field
-                            appearance="standard"
-                            color="primary"
-                            class="stat-input"
-                        >
-                            <mat-label> Hp </mat-label>
-                            <input
-                                matInput
-                                placeholder="0"
-                                type="number"
-                                formControlName="value"
-                                (keyup)="applyFilter('hp')"
-                            />
-                        </mat-form-field>
-                    </div>
+                    <app-number-comparison
+                        (applyFilter)="onApplyFilter($event)"
+                        groupName="hp"
+                        label="Hp"
+                    ></app-number-comparison>
 
                     <!-- Attack -->
-                    <div class="stat-wrapper" formGroupName="attack">
-                        <mat-button-toggle-group
-                            class="stat-comparison-wrapper"
-                            formControlName="comparisonSign"
-                            (change)="applyFilter('attack')"
-                        >
-                            <mat-button-toggle value="smaller">
-                                <
-                            </mat-button-toggle>
-                            <mat-button-toggle value="equal">
-                                =
-                            </mat-button-toggle>
-                            <mat-button-toggle value="greater">
-                                >
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <mat-form-field
-                            appearance="standard"
-                            color="primary"
-                            class="stat-input"
-                        >
-                            <mat-label> Atk </mat-label>
-                            <input
-                                matInput
-                                placeholder="0"
-                                type="number"
-                                formControlName="value"
-                                (keyup)="applyFilter('attack')"
-                            />
-                        </mat-form-field>
-                    </div>
+                    <app-number-comparison
+                        (applyFilter)="onApplyFilter($event)"
+                        groupName="attack"
+                        label="Atk"
+                    ></app-number-comparison>
 
                     <!-- Defense -->
-                    <div class="stat-wrapper" formGroupName="defense">
-                        <mat-button-toggle-group
-                            class="stat-comparison-wrapper"
-                            formControlName="comparisonSign"
-                            (change)="applyFilter('defense')"
-                        >
-                            <mat-button-toggle value="smaller">
-                                <
-                            </mat-button-toggle>
-                            <mat-button-toggle value="equal">
-                                =
-                            </mat-button-toggle>
-                            <mat-button-toggle value="greater">
-                                >
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <mat-form-field
-                            appearance="standard"
-                            color="primary"
-                            class="stat-input"
-                        >
-                            <mat-label> Def </mat-label>
-                            <input
-                                matInput
-                                placeholder="0"
-                                type="number"
-                                formControlName="value"
-                                (keyup)="applyFilter('defense')"
-                            />
-                        </mat-form-field>
-                    </div>
+                    <app-number-comparison
+                        (applyFilter)="onApplyFilter($event)"
+                        groupName="defense"
+                        label="Def"
+                    ></app-number-comparison>
 
                     <!-- Speed -->
-                    <div class="stat-wrapper" formGroupName="speed">
-                        <mat-button-toggle-group
-                            class="stat-comparison-wrapper"
-                            formControlName="comparisonSign"
-                            (change)="applyFilter('speed')"
-                        >
-                            <mat-button-toggle value="smaller">
-                                <
-                            </mat-button-toggle>
-                            <mat-button-toggle value="equal">
-                                =
-                            </mat-button-toggle>
-                            <mat-button-toggle value="greater">
-                                >
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <mat-form-field
-                            appearance="standard"
-                            color="primary"
-                            class="stat-input"
-                        >
-                            <mat-label> Speed </mat-label>
-                            <input
-                                matInput
-                                placeholder="0"
-                                type="number"
-                                formControlName="value"
-                                (keyup)="applyFilter('speed')"
-                            />
-                        </mat-form-field>
-                    </div>
+                    <app-number-comparison
+                        (applyFilter)="onApplyFilter($event)"
+                        groupName="speed"
+                        label="Speed"
+                    ></app-number-comparison>
 
                     <!-- Special attack -->
-                    <div class="stat-wrapper" formGroupName="special-attack">
-                        <mat-button-toggle-group
-                            class="stat-comparison-wrapper"
-                            formControlName="comparisonSign"
-                            (change)="applyFilter('special-attack')"
-                        >
-                            <mat-button-toggle value="smaller">
-                                <
-                            </mat-button-toggle>
-                            <mat-button-toggle value="equal">
-                                =
-                            </mat-button-toggle>
-                            <mat-button-toggle value="greater">
-                                >
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <mat-form-field
-                            appearance="standard"
-                            color="primary"
-                            class="stat-input"
-                        >
-                            <mat-label> Sp. Atk </mat-label>
-                            <input
-                                matInput
-                                placeholder="0"
-                                type="number"
-                                formControlName="value"
-                                (keyup)="applyFilter('special-attack')"
-                            />
-                        </mat-form-field>
-                    </div>
+                    <app-number-comparison
+                        (applyFilter)="onApplyFilter($event)"
+                        groupName="special-attack"
+                        label="Sp. Atk"
+                    ></app-number-comparison>
 
                     <!-- Special defense -->
-                    <div class="stat-wrapper" formGroupName="special-defense">
-                        <mat-button-toggle-group
-                            class="stat-comparison-wrapper"
-                            formControlName="comparisonSign"
-                            (change)="applyFilter('special-defense')"
-                        >
-                            <mat-button-toggle value="smaller">
-                                <
-                            </mat-button-toggle>
-                            <mat-button-toggle value="equal">
-                                =
-                            </mat-button-toggle>
-                            <mat-button-toggle value="greater">
-                                >
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <mat-form-field
-                            appearance="standard"
-                            color="primary"
-                            class="stat-input"
-                        >
-                            <mat-label> Sp. Def </mat-label>
-                            <input
-                                matInput
-                                placeholder="0"
-                                type="number"
-                                formControlName="value"
-                                (keyup)="applyFilter('special-defense')"
-                            />
-                        </mat-form-field>
-                    </div>
+                    <app-number-comparison
+                        (applyFilter)="onApplyFilter($event)"
+                        groupName="special-defense"
+                        label="Sp. Def"
+                    ></app-number-comparison>
                 </div>
 
                 <div class="moves-abilities-wrapper">
-                    <!-- Move 1 -->
-                    <mat-form-field
-                        appearance="outline"
-                        color="primary"
-                        class="move"
-                    >
-                        <mat-label> Move </mat-label>
-                        <mat-select
-                            formControlName="firstMove"
-                            (selectionChange)="applyFilter('firstMove')"
-                        >
-                            <div
-                                class="spinner-wrapper"
-                                *ngIf="movesDataIsLoading"
-                            >
-                                <mat-spinner></mat-spinner>
-                            </div>
-                            <div
-                                class="optionsWrapper"
-                                [hidden]="movesDataIsLoading"
-                            >
-                                <mat-option> None </mat-option>
-                                <mat-option
-                                    *ngFor="let move of movesList"
-                                    [value]="move.name"
-                                >
-                                    {{
-                                        move.names | getSingleValue: "fr":"name"
-                                    }}
-                                    <span
-                                        class="icon-wrapper"
-                                        *ngIf="move.damageClass"
-                                    >
-                                        <img
-                                            class="icon"
-                                            [src]="
-                                                '../../../assets/icons/' +
-                                                move.damageClass +
-                                                '_icon.png'
-                                            "
-                                            [alt]="move.damageClass"
-                                        />
-                                    </span>
-                                </mat-option>
-                            </div>
-                        </mat-select>
-                    </mat-form-field>
+                    <!-- First move -->
+                    <app-select
+                        (applyFilter)="onApplyFilter($event)"
+                        controlName="firstMove"
+                        label="move"
+                        [optionsArray]="movesList"
+                        [dataIsLoading]="movesDataIsLoading"
+                    ></app-select>
 
-                    <!-- Move 2 -->
-                    <mat-form-field
-                        appearance="outline"
-                        color="primary"
-                        class="move"
-                    >
-                        <mat-label> Move </mat-label>
-                        <mat-select
-                            formControlName="secondMove"
-                            (selectionChange)="applyFilter('secondMove')"
-                        >
-                            <div
-                                class="spinner-wrapper"
-                                *ngIf="movesDataIsLoading"
-                            >
-                                <mat-spinner></mat-spinner>
-                            </div>
-                            <div
-                                class="optionsWrapper"
-                                [hidden]="movesDataIsLoading"
-                            >
-                                <mat-option> None </mat-option>
-                                <mat-option
-                                    *ngFor="let move of movesList"
-                                    [value]="move.name"
-                                >
-                                    {{
-                                        move.names | getSingleValue: "fr":"name"
-                                    }}
-                                    <span
-                                        class="icon-wrapper"
-                                        *ngIf="move.damageClass"
-                                    >
-                                        <img
-                                            class="icon"
-                                            [src]="
-                                                '../../../assets/icons/' +
-                                                move.damageClass +
-                                                '_icon.png'
-                                            "
-                                            [alt]="move.damageClass"
-                                        />
-                                    </span>
-                                </mat-option>
-                            </div>
-                        </mat-select>
-                    </mat-form-field>
+                    <!-- Second move-->
+                    <app-select
+                        (applyFilter)="onApplyFilter($event)"
+                        controlName="secondMove"
+                        label="move"
+                        [optionsArray]="movesList"
+                    ></app-select>
 
                     <!-- Ability -->
-                    <mat-form-field
-                        appearance="outline"
-                        color="primary"
-                        class="ability"
-                    >
-                        <mat-label> Ability </mat-label>
-                        <mat-select
-                            formControlName="ability"
-                            (selectionChange)="applyFilter('ability')"
-                        >
-                            <div
-                                class="spinner-wrapper"
-                                *ngIf="abilitiesDataIsLoading"
-                            >
-                                <mat-spinner></mat-spinner>
-                            </div>
-                            <div
-                                class="optionsWrapper"
-                                [hidden]="abilitiesDataIsLoading"
-                            >
-                                <mat-option> None </mat-option>
-                                <mat-option
-                                    *ngFor="let ability of abilitiesList"
-                                    [value]="ability.name"
-                                >
-                                    {{
-                                        ability.names
-                                            | getSingleValue: "fr":"name"
-                                    }}
-                                </mat-option>
-                            </div>
-                        </mat-select>
-                    </mat-form-field>
+                    <app-select
+                        (applyFilter)="onApplyFilter($event)"
+                        controlName="ability"
+                        label="ability"
+                        [optionsArray]="abilitiesList"
+                    ></app-select>
                 </div>
             </div>
         </mat-expansion-panel>

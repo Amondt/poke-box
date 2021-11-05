@@ -1,5 +1,7 @@
+import { SingleName } from './single-name.model';
+
 export interface SingleType {
     name: string;
-    frName: string;
+    names: SingleName[];
     color: string;
 }

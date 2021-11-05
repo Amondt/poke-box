@@ -19,31 +19,29 @@ export interface FilterValues {
         generationVII: boolean;
         generationVIII: boolean;
     };
-    statFilters: {
-        hp: {
-            value: number;
-            comparisonSign: string;
-        };
-        attack: {
-            value: number;
-            comparisonSign: string;
-        };
-        defense: {
-            value: number;
-            comparisonSign: string;
-        };
-        speed: {
-            value: number;
-            comparisonSign: string;
-        };
-        'special-attack': {
-            value: number;
-            comparisonSign: string;
-        };
-        'special-defense': {
-            value: number;
-            comparisonSign: string;
-        };
+    hp: {
+        value: number | null;
+        comparisonSign: string;
+    };
+    attack: {
+        value: number | null;
+        comparisonSign: string;
+    };
+    defense: {
+        value: number | null;
+        comparisonSign: string;
+    };
+    speed: {
+        value: number | null;
+        comparisonSign: string;
+    };
+    'special-attack': {
+        value: number | null;
+        comparisonSign: string;
+    };
+    'special-defense': {
+        value: number | null;
+        comparisonSign: string;
     };
     firstMove: string;
     secondMove: string;

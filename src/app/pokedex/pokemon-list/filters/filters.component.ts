@@ -31,7 +31,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
     abilitiesListSubscription: Subscription;
     abilitiesDataIsLoading = true;
 
-    @Output() onApplyFilters = new EventEmitter<{
+    @Output() applyFilters = new EventEmitter<{
         ['filterValues']: FilterValues;
         ['changedValue']: string;
     }>();
@@ -67,36 +67,36 @@ export class FiltersComponent implements OnInit, OnDestroy {
                 generationVII: true,
                 generationVIII: true,
             }),
-            statFilters: this.fb.group({
-                hp: this.fb.group({
-                    value: null,
-                    comparisonSign: 'equal',
-                }),
-                attack: this.fb.group({
-                    value: null,
-                    comparisonSign: 'equal',
-                }),
-                defense: this.fb.group({
-                    value: null,
-                    comparisonSign: 'equal',
-                }),
-                speed: this.fb.group({
-                    value: null,
-                    comparisonSign: 'equal',
-                }),
-                'special-attack': this.fb.group({
-                    value: null,
-                    comparisonSign: 'equal',
-                }),
-                'special-defense': this.fb.group({
-                    value: null,
-                    comparisonSign: 'equal',
-                }),
+            hp: this.fb.group({
+                value: null,
+                comparisonSign: 'equal',
+            }),
+            attack: this.fb.group({
+                value: null,
+                comparisonSign: 'equal',
+            }),
+            defense: this.fb.group({
+                value: null,
+                comparisonSign: 'equal',
+            }),
+            speed: this.fb.group({
+                value: null,
+                comparisonSign: 'equal',
+            }),
+            'special-attack': this.fb.group({
+                value: null,
+                comparisonSign: 'equal',
+            }),
+            'special-defense': this.fb.group({
+                value: null,
+                comparisonSign: 'equal',
             }),
             firstMove: '',
             secondMove: '',
             ability: '',
         });
+
+        console.log(this.filtersForm);
 
         this.movesList = this.pokedexService.getMovesList();
         if (this.movesList.length > 0) this.movesDataIsLoading = false;
@@ -121,38 +121,13 @@ export class FiltersComponent implements OnInit, OnDestroy {
             );
     }
 
-    controlCheckboxStatus = (group: string, type: string) => {
-        const resArray = [];
-        const object = (this.filtersForm.get(group) as FormGroup).value;
-        for (const property in object) {
-            resArray.push(object[property]);
-        }
-        if (type === 'indeterminate') {
-            return (
-                !resArray.every((res) => res === true) &&
-                !resArray.every((res) => res === false)
-            );
-        } else {
-            return (
-                resArray.some((res) => res === true) ||
-                !resArray.some((res) => res === false)
-            );
-        }
+    onFormReady = (name: string, form: FormGroup) => {
+        this.filtersForm.setControl(name, form);
+        console.log(this.filtersForm);
     };
 
-    checkAll = (event: MatCheckboxChange, group: string) => {
-        const formGroup = this.filtersForm.get(group) as FormGroup;
-        for (const property in formGroup.value) {
-            (formGroup.get(property) as FormControl).setValue(event.checked);
-        }
-        this.applyFilter(group);
-    };
-
-    applyFilter = (changedValue: string) => {
-        const searchBar = <FormControl>this.filtersForm.get('searchBar');
-        searchBar.setValue(searchBar.value.trim().toLocaleLowerCase());
-
-        this.onApplyFilters.emit({
+    onApplyFilter = (changedValue: string) => {
+        this.applyFilters.emit({
             filterValues: this.filtersForm.value,
             changedValue,
         });

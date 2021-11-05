@@ -24,6 +24,7 @@ export class GetSingleValuePipe implements PipeTransform {
                         return (value as SingleStat).name === filter;
                     }) as SingleStat
                 ).base_stat;
+            // case ''
             default:
                 return '';
         }

@@ -1,5 +1,5 @@
 <div class="container">
-    <app-filters (onApplyFilters)="applyFilters($event)"></app-filters>
+    <app-filters (applyFilters)="onApplyFilters($event)"></app-filters>
     <table
         mat-table
         [dataSource]="pokemonList"

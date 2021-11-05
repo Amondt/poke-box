@@ -54,9 +54,15 @@ export class PokedexService {
     }
 
     getFullDataFromPokeApi = async () => {
-        const pokemonsFinalList = await this.getPokemonsFromPokeApi();
-        const movesFinalList = await this.getMovesFromPokeApi();
-        const abilitiesFinalList = await this.getAbilitiesFromPokeApi();
+        const [pokemonsFinalList, movesFinalList, abilitiesFinalList] =
+            await Promise.all([
+                this.getPokemonsFromPokeApi(),
+                this.getMovesFromPokeApi(),
+                this.getAbilitiesFromPokeApi(),
+            ]);
+        // const pokemonsFinalList = await this.getPokemonsFromPokeApi();
+        // const movesFinalList = await this.getMovesFromPokeApi();
+        // const abilitiesFinalList = await this.getAbilitiesFromPokeApi();
 
         this.updateFirebaseDb(
             pokemonsFinalList,
